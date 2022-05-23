@@ -67,7 +67,7 @@ jobs:
         with:
           file: ${{ steps.load-manifest.outputs.docker-file }}
           context: ${{ steps.load-manifest.outputs.context }}
-          push: ${{ github.ref == 'refs/heads/master' }}
+          push: ${{ github.actor != 'dependabot[bot]' }}
           cache-from: ${{ github.actor != 'dependabot[bot]' && format('type=registry,ref={0}:cache', steps.load-manifest.outputs.image-name) || ''}}
           cache-to: ${{ github.actor != 'dependabot[bot]' && format('type=registry,ref={0}:cache,mode=max', steps.load-manifest.outputs.image-name) || ''}}
           build-args: |
@@ -91,6 +91,7 @@ jobs:
         uses: peter-evans/create-or-update-comment@v2
         with:
           issue-number: 2 #${{ github.event.pull_request.number }}
+          if: ${{ github.actor != 'dependabot[bot]' }}
           body: |
             Output:
             ```
