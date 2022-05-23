@@ -46,13 +46,13 @@ jobs:
         shell: pwsh
 
       - name: Stage Changes
-        id: state-changes
+        id: stage-changes
         run: |
           $agentVersion = '${{ steps.validate-event.outputs.agent-version }}'
           $manifestPath = '${{ steps.validate-event.outputs.manifest-path }}'
 
           $manifest = Get-Content -Path $manifestPath | ConvertFrom-Json
-          Write-Host "::set-output name=old-version::${manifest.version}"
+          Write-Host "::set-output name=old-version::$($manifest.version)"
 
           $manifest.version = $agentVersion
           $manifest | ConvertTo-Json | Set-Content -Path $manifestPath -Encoding UTF8
@@ -73,7 +73,7 @@ jobs:
             Automated OOB update requested by ${{ github.actor }}.
 
             Agent: `${{ steps.validate-event.outputs.agent-type }}`
-            Version: `${{ steps.state-changes.outputs.old-version }}` -> `${{ steps.validate-event.outputs.agent-version }}`
+            Version: `${{ steps.stage-changes.outputs.old-version }}` -> `${{ steps.validate-event.outputs.agent-version }}`
           labels: |
             automerge
             oob-update

@@ -40,6 +40,8 @@ jobs:
       matrix:
         variants: ${{ fromJSON(needs.load-manifest.outputs.variants) }}
     runs-on: ubuntu-latest
+    outputs:
+      variants: ${{ steps.detect-artifact.outputs.artifact-image }}
     env:
       IMAGE_NAME: contrastdotnet.azurecr.io/agent-operator/agents/${{ matrix.variants.image-name-suffix }}
       CACHED_IMAGE_NAME: contrastdotnet.azurecr.io/agent-operator/cache/${{ matrix.variants.image-name-suffix }}
@@ -67,6 +69,7 @@ jobs:
           password: ${{ secrets.AZURE_CLIENT_SECRET }}
 
       - uses: docker/build-push-action@v2
+        id: build
         with:
           file: ${{ matrix.variants.docker-file }}
           context: ${{ matrix.variants.context }}
@@ -77,6 +80,28 @@ jobs:
             VERSION=${{ matrix.variants.version }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Detect Artifact
+        id: detect-artifact
+        run: |
+          $artifactImage = '${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}'
+          Write-Host "::set-output name=artifact-image::$artifactImage"
+        shell: pwsh
+  build-succeeded:
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
+    steps:
+      - name: Create Digest Comment
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            Built:
+            ```
+            ${{ toJson(needs.detect-artifact.outputs) }}
+            ```
 
 # type=semver,pattern={{version}},value=${{ matrix.variants.version }},enable=${{ matrix.variants.type != 'java' }}
 # type=semver,pattern={{major}}.{{minor}},value=${{ matrix.variants.version }},enable=${{ matrix.variants.type != 'java' }}
