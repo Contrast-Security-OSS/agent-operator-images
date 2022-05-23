@@ -6,35 +6,23 @@ on:
       - master
 
 jobs:
-  load-manifest:
-    runs-on: ubuntu-latest
-    outputs:
-      variants: ${{ steps.detect-matrix.outputs.variants }}
-    steps:
-      - uses: actions/checkout@v2
-      - name: Detect Matrix
-        id: detect-matrix
-        run: |
-          $variants = @()
-          $manifests = Get-ChildItem -Recurse -Filter manifest.json
-          foreach ($i in $manifests) {
-            $variants += $i.Directory.Name
-          }
-          $json = ConvertTo-Json -Compress $variants
-          Write-Host "::set-output name=variants::$json"
-        shell: pwsh
   #
   # Building Stage
   #
   build:
-    needs:
-      - load-manifest
     strategy:
       matrix:
-        variant: ${{ fromJSON(needs.load-manifest.outputs.variants) }}
+        variant:
+          - dotnet-core
+          - java
+          - nodejs
+          - php
     runs-on: ubuntu-latest
     outputs:
-      artifact-image: ${{ steps.detect-artifact.outputs.artifact-image }}
+      artifact-image-dotnet-core: ${{ steps.detect-artifact.outputs.artifact-image-dotnet-core }}
+      artifact-image-java: ${{ steps.detect-artifact.outputs.artifact-image-java }}
+      artifact-image-nodejs: ${{ steps.detect-artifact.outputs.artifact-image-nodejs }}
+      artifact-image-php: ${{ steps.detect-artifact.outputs.artifact-image-php }}
     env:
       AGENT_TYPE: ${{ matrix.variant }}
     steps:
@@ -91,22 +79,25 @@ jobs:
         id: detect-artifact
         run: |
           $artifactImage = '${{ steps.load-manifest.outputs.image-name }}@${{ steps.build.outputs.digest }}'
-          Write-Host "::set-output name=artifact-image::$artifactImage"
+          Write-Host "::set-output name=artifact-image-${{ env.AGENT_TYPE }}::$artifactImage"
         shell: pwsh
   build-succeeded:
     needs:
       - build
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'pull_request' }}
+    # if: ${{ github.event_name == 'pull_request' }}
     steps:
       - name: Create Digest Comment
         uses: peter-evans/create-or-update-comment@v2
         with:
-          issue-number: ${{ github.event.pull_request.number }}
+          issue-number: 2 #${{ github.event.pull_request.number }}
           body: |
             Output:
             ```
-            ${{ toJson(needs) }}
+            dotnet-core: ${{ needs.build.outputs.artifact-image-dotnet-core }}
+            java: ${{ needs.build.outputs.artifact-image-java }}
+            nodejs: ${{ needs.build.outputs.artifact-image-nodejs }}
+            php: ${{ needs.build.outputs.artifact-image-php }}
             ```
 
 # type=semver,pattern={{version}},value=${{ matrix.variants.version }},enable=${{ matrix.variants.type != 'java' }}
