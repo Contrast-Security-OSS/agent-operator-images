@@ -85,12 +85,12 @@ jobs:
     needs:
       - build
     runs-on: ubuntu-latest
-    # if: ${{ github.event_name == 'pull_request' }}
+    if: ${{ github.event_name == 'pull_request' }}
     steps:
       - name: Create Digest Comment
         uses: peter-evans/create-or-update-comment@v2
         with:
-          issue-number: 2 #${{ github.event.pull_request.number }}
+          issue-number: ${{ github.event.pull_request.number }}
           if: ${{ github.actor != 'dependabot[bot]' }}
           body: |
             Output:
