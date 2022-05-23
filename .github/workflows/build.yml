@@ -58,7 +58,7 @@ jobs:
 
       - name: Docker Meta
         id: meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           images: ${{ steps.load-manifest.outputs.image-name }}
           tags: |
@@ -74,7 +74,7 @@ jobs:
           username: ${{ secrets.AZURE_CLIENT_ID }}
           password: ${{ secrets.AZURE_CLIENT_SECRET }}
 
-      - uses: docker/build-push-action@v2
+      - uses: docker/build-push-action@v3
         id: build
         with:
           file: ${{ steps.load-manifest.outputs.docker-file }}
@@ -104,9 +104,9 @@ jobs:
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            Built:
+            Output:
             ```
-            ${{ toJson(needs.build) }}
+            ${{ toJson(needs) }}
             ```
 
 # type=semver,pattern={{version}},value=${{ matrix.variants.version }},enable=${{ matrix.variants.type != 'java' }}
