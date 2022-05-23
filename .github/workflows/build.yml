@@ -1,0 +1,91 @@
+name: "Build"
+on:
+  push:
+    branches:
+      - master
+      - actions/oob-*
+
+jobs:
+  load-manifest:
+    runs-on: ubuntu-latest
+    outputs:
+      variants: ${{ steps.detect-matrix.outputs.variants }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Detect Matrix
+        id: detect-matrix
+        run: |
+          $variants = @()
+          $manifests = Get-ChildItem -Recurse -Filter manifest.json
+          foreach ($i in $manifests) {
+            $manifest = Get-Content $i | ConvertFrom-Json
+            $variants += @{
+              "type"              = $i.Directory.Name
+              "version"           = $manifest.version
+              "docker-file"       = $manifest.dockerFile
+              "context"           = $manifest.context
+              "image-name-suffix" = $manifest.imageNameSuffix
+            }
+          }
+          $json = ConvertTo-Json -Compress $variants
+          Write-Host "::set-output name=variants::$json"
+        shell: pwsh
+  #
+  # Building Stage
+  #
+  build:
+    needs:
+      - load-manifest
+    strategy:
+      matrix:
+        variants: ${{ fromJSON(needs.load-manifest.outputs.variants) }}
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: contrastdotnet.azurecr.io/agent-operator/agents/${{ matrix.variants.image-name-suffix }}
+      CACHED_IMAGE_NAME: contrastdotnet.azurecr.io/agent-operator/cache/${{ matrix.variants.image-name-suffix }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: docker/setup-buildx-action@v1
+        with:
+          install: true
+          version: latest
+
+      - name: Docker Meta
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=trunk-artifact,enable=${{ github.ref == 'refs/heads/master' }}
+            type=raw,value=pr-artifact,enable=${{ github.event_name == 'pull_request' }}
+
+      - uses: docker/login-action@v1
+        if: ${{ github.actor != 'dependabot[bot]' }}
+        with:
+          registry: contrastdotnet.azurecr.io
+          username: ${{ secrets.AZURE_CLIENT_ID }}
+          password: ${{ secrets.AZURE_CLIENT_SECRET }}
+
+      - uses: docker/build-push-action@v2
+        with:
+          file: ${{ matrix.variants.docker-file }}
+          context: ${{ matrix.variants.context }}
+          push: ${{ github.ref == 'refs/heads/master' }}
+          cache-from: ${{ github.actor != 'dependabot[bot]' && format('type=registry,ref={0}:latest', env.CACHED_IMAGE_NAME) || ''}}
+          cache-to: ${{ github.actor != 'dependabot[bot]' && format('type=registry,ref={0}:latest,mode=max', env.CACHED_IMAGE_NAME) || ''}}
+          build-args: |
+            VERSION=${{ matrix.variants.version }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+# type=semver,pattern={{version}},value=${{ matrix.variants.version }},enable=${{ matrix.variants.type != 'java' }}
+# type=semver,pattern={{major}}.{{minor}},value=${{ matrix.variants.version }},enable=${{ matrix.variants.type != 'java' }}
+# type=semver,pattern={{major}},value=${{ matrix.variants.version }},enable=${{ matrix.variants.type != 'java' }}
+
+# type=match,pattern=(\d+\.\d+\.\d+\.\d+),group=1,value=${{ matrix.variants.version }},enable=${{ matrix.variants.type == 'java' }}
+# type=match,pattern=(\d+\.\d+\.\d+)\.\d+,group=1,value=${{ matrix.variants.version }},enable=${{ matrix.variants.type == 'java' }}
+# type=match,pattern=(\d+\.\d+)\.\d+\.\d+,group=1,value=${{ matrix.variants.version }},enable=${{ matrix.variants.type == 'java' }}
+# type=match,pattern=(\d+)\.\d+\.\d+\.\d+,group=1,value=${{ matrix.variants.version }},enable=${{ matrix.variants.type == 'java' }}
+
+# type=raw,value=${{ matrix.variants.version }}
+# type=raw,value=latest,enable={{is_default_branch}}
