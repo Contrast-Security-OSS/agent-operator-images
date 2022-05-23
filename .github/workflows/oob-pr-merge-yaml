@@ -1,0 +1,36 @@
+name: "OOB Merge"
+on:
+  pull_request:
+    types:
+      - labeled
+      - unlabeled
+      - synchronize
+      - opened
+      - edited
+      - ready_for_review
+      - reopened
+      - unlocked
+  pull_request_review:
+    types:
+      - submitted
+  check_suite:
+    types:
+      - completed
+  status: {}
+
+jobs:
+  oob-update:
+    runs-on: ubuntu-latest
+    outputs:
+      agent-type: ${{ steps.validate-event.outputs.agent-type }}
+      agent-version: ${{ steps.validate-event.outputs.agent-version }}
+    steps:
+      - name: automerge
+        uses: pascalgn/automerge-action@v0.15.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MERGE_LABELS: automerge,oob-update
+          MERGE_METHOD: rebase
+          MERGE_DELETE_BRANCH: true
+          UPDATE_LABELS: automerge,oob-update
+          UPDATE_METHOD: rebase

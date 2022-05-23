@@ -1,0 +1,76 @@
+name: "OOB Update"
+on:
+  repository_dispatch:
+    types:
+      - oob-update
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  oob-update:
+    runs-on: ubuntu-latest
+    outputs:
+      agent-type: ${{ steps.validate-event.outputs.agent-type }}
+      agent-version: ${{ steps.validate-event.outputs.agent-version }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Validate Event
+        id: validate-event
+        run: |
+          $clientPayload = '${{ toJSON(github.event.client_payload) }}' | ConvertFrom-Json
+          [string] $agentType = $clientPayload.type
+          [string] $agentVersion = $clientPayload.version
+          [string] $manifestPath = "./src/$agentType/manifest.json"
+
+          if ($agentType -notmatch '^(nodejs|java|dotnet-core|php)$')
+          {
+              Write-Error "Failed to validate agent type."
+              exit 1
+          }
+          if (-not (Test-Path -Path $manifestPath))
+          {
+              Write-Error "$manifestPath does not exist."
+              exit 1
+          }
+          if ($agentVersion -notmatch '^\d+(\.\d+){2,3}$')
+          {
+              Write-Error "Failed to validate agent version."
+              exit 1
+          }
+
+          Write-Host "::set-output name=agent-type::$agentType"
+          Write-Host "::set-output name=agent-version::$agentVersion"
+          Write-Host "::set-output name=manifest-path::$manifestPath"
+        shell: pwsh
+
+      - name: Stage Changes
+        run: |
+          $agentVersion = '${{ steps.validate-event.outputs.agent-version }}'
+          $manifestPath = '${{ steps.validate-event.outputs.manifest-path }}'
+
+          $manifest = Get-Content -Path $manifestPath | ConvertFrom-Json
+          $manifest.version = $agentVersion
+          $manifest | ConvertTo-Json | Set-Content -Path $manifestPath -Encoding UTF8
+        shell: pwsh
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          add-paths: |
+            ${{ steps.validate-event.outputs.manifest-path }}
+          commit-message: |
+            Upgraded '${{ steps.validate-event.outputs.agent-type }}' to '${{ steps.validate-event.outputs.agent-version }}'
+          branch: actions/oob
+          branch-suffix: short-commit-hash
+          title: |
+            [OOB] Upgrades '${{ steps.validate-event.outputs.agent-type }}' to '${{ steps.validate-event.outputs.agent-version }}'
+          body: |
+            Automated OOB update requested by ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>.
+
+            Agent: `${{ steps.validate-event.outputs.agent-type }}`
+            Version: `${{ steps.validate-event.outputs.agent-version }}`
+          labels: |
+            automerge
+            oob-update
