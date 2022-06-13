@@ -1,0 +1,6 @@
+{
+    "expects": [
+        "node_modules/@contrast/agent/bootstrap.js",
+        "image-manifest.json"
+    ]
+}

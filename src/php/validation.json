@@ -1,0 +1,7 @@
+{
+    "expects": [
+        "contrast.so",
+        "image-manifest.json",
+        "ini/php.ini"
+    ]
+}
