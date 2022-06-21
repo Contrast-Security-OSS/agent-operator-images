@@ -59,7 +59,6 @@ jobs:
             org.opencontainers.image.revision=${{ github.sha }}
 
       - uses: docker/login-action@v1
-        if: ${{ github.actor != 'dependabot[bot]' }}
         with:
           registry: contrastdotnet.azurecr.io
           username: ${{ secrets.AZURE_CLIENT_ID }}
@@ -70,7 +69,7 @@ jobs:
         with:
           file: ${{ steps.load-manifest.outputs.docker-file }}
           context: ${{ steps.load-manifest.outputs.context }}
-          push: ${{ github.actor != 'dependabot[bot]' }}
+          push: true
           cache-from: ${{ github.actor != 'dependabot[bot]' && format('type=registry,ref={0}:cache', steps.load-manifest.outputs.image-name) || ''}}
           cache-to: ${{ github.actor != 'dependabot[bot]' && format('type=registry,ref={0}:cache,mode=max', steps.load-manifest.outputs.image-name) || ''}}
           build-args: |
