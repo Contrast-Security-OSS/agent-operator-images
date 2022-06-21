@@ -42,7 +42,7 @@ jobs:
           Write-Host "::set-output name=image-name::contrastdotnet.azurecr.io/agent-operator/agent-$($manifest.imageNameSuffix)"
         shell: pwsh
 
-      - uses: docker/setup-buildx-action@v1
+      - uses: docker/setup-buildx-action@v2
         with:
           install: true
           version: latest
