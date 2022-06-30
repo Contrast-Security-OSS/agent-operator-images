@@ -9,10 +9,10 @@ Managed by the Contrast .NET agent team.
 Public images are deployed to DockerHub. Currently, this repo publishes:
 
 
-- [contrast/agent-dotnet-core](https://hub.docker.com/repository/docker/contrast/agent-dotnet-core)
-- [contrast/agent-java](https://hub.docker.com/repository/docker/contrast/agent-java)
-- [contrast/agent-nodejs](https://hub.docker.com/repository/docker/contrast/agent-nodejs)
-- [contrast/agent-php](https://hub.docker.com/repository/docker/contrast/agent-php)
+[![contrast/agent-dotnet-core](https://img.shields.io/docker/v/contrast/agent-dotnet-core?label=contrast%2Fagent-dotnet-core&logo=docker&logoColor=white&style=flat-square&cacheSeconds=86400)](https://hub.docker.com/repository/docker/contrast/agent-dotnet-core)
+[![contrast/agent-java](https://img.shields.io/docker/v/contrast/agent-java?label=contrast%2Fagent-java&logo=docker&logoColor=white&style=flat-square&cacheSeconds=86400)](https://hub.docker.com/repository/docker/contrast/agent-java)
+[![contrast/agent-nodejs](https://img.shields.io/docker/v/contrast/agent-nodejs?label=contrast%2Fagent-nodejs&logo=docker&logoColor=white&style=flat-square&cacheSeconds=86400)](https://hub.docker.com/repository/docker/contrast/agent-nodejs)
+[![contrast/agent-php](https://img.shields.io/docker/v/contrast/agent-php?label=contrast%2Fagent-php&logo=docker&logoColor=white&style=flat-square&cacheSeconds=86400)](https://hub.docker.com/repository/docker/contrast/agent-php)
 
 
 Tags are generated in the following format for agents that support semantic versioning. For the Java agent, the format is similar.
