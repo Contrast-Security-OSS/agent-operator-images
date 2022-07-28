@@ -2,5 +2,13 @@
   "version": "2.1.17",
   "imageNameSuffix": "dotnet-core",
   "dockerFile": "src/dotnet-core/Dockerfile",
-  "context": "."
+  "context": ".",
+  "validation": {
+    "enabled": true,
+    "expects": [
+      "image-manifest.json",
+      "runtimes/linux-x64/native/ContrastProfiler.so",
+      "runtimes/linux-x64/native/ContrastChainLoader.so"
+    ]
+  }
 }

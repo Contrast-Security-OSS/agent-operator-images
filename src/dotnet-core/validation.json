@@ -1,7 +1,0 @@
-{
-    "expects": [
-        "image-manifest.json",
-        "runtimes/linux-x64/native/ContrastProfiler.so",
-        "runtimes/linux-x64/native/ContrastChainLoader.so"
-    ]
-}

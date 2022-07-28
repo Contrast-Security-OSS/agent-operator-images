@@ -29,6 +29,15 @@ else
 
 try
 {
+    $validation = (Get-Content -Path "$agentPath/manifest.json" | ConvertFrom-Json).validation
+    $enabled = $validation.enabled
+
+    if (-not $enabled)
+    {
+        Write-Host "Validation disabled, assuming success."
+        exit 0
+    }
+
     Write-Host "Running image entrypoint."
     docker run `
         -i `
@@ -47,7 +56,7 @@ try
         Write-Host "Found file `"$($_.FullName)`""
     }
 
-    $expectedFiles = (Get-Content -Path "$agentPath/validation.json" | ConvertFrom-Json).Expects | ForEach-Object {
+    $expectedFiles = $validation.expects | ForEach-Object {
         Join-Path $workspace $_
     }
 

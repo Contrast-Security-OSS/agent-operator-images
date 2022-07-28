@@ -2,5 +2,13 @@
   "version": "1.5.0",
   "imageNameSuffix": "php",
   "dockerFile": "src/php/Dockerfile",
-  "context": "."
+  "context": ".",
+  "validation": {
+    "enabled": true,
+    "expects": [
+      "contrast.so",
+      "image-manifest.json",
+      "ini/php.ini"
+    ]
+  }
 }

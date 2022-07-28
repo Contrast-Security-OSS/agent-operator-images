@@ -7,7 +7,7 @@ RUN set -xe \
   && apt-get update \
   && apt-get install -y curl unzip rsync
 
-ARG VERSION=2.1.10
+ARG VERSION=2.1.16
 
 RUN set -xe \
   && curl --location https://www.nuget.org/api/v2/package/Contrast.SensorsNetCore/${VERSION} --output /tmp/contrast.zip \
@@ -20,7 +20,7 @@ FROM busybox:stable AS final
 COPY ./src/shared/entrypoint.sh /entrypoint.sh
 COPY --from=builder /contrast /contrast
 
-ARG VERSION=2.1.10
+ARG VERSION=2.1.16
 ENV CONTRAST_MOUNT_PATH=/contrast-init \
   CONTRAST_VERSION=${VERSION}
 

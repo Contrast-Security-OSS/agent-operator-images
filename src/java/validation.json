@@ -1,6 +1,0 @@
-{
-    "expects": [
-        "contrast-agent.jar",
-        "image-manifest.json"
-    ]
-}
