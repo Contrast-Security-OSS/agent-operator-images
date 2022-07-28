@@ -1,0 +1,11 @@
+{
+  "version": "50.0.18",
+  "imageNameSuffix": "dotnet-framework",
+  "dockerFile": "src/dotnet-framework/Dockerfile",
+  "context": ".",
+  "platforms": "windows/amd64",
+  "validation": {
+    "enabled": false,
+    "expects": []
+  }
+}

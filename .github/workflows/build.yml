@@ -13,6 +13,7 @@ jobs:
       matrix:
         variant:
           - dotnet-core
+          - dotnet-framework
           - java
           - nodejs
           - php
@@ -20,6 +21,8 @@ jobs:
     outputs:
       artifact-image-dotnet-core: ${{ steps.detect-artifact.outputs.artifact-image-dotnet-core }}
       artifact-version-dotnet-core: ${{ steps.detect-artifact.outputs.artifact-version-dotnet-core }}
+      artifact-image-dotnet-framework: ${{ steps.detect-artifact.outputs.artifact-image-dotnet-framework }}
+      artifact-version-dotnet-framework: ${{ steps.detect-artifact.outputs.artifact-version-dotnet-framework }}
       artifact-image-java: ${{ steps.detect-artifact.outputs.artifact-image-java }}
       artifact-version-java: ${{ steps.detect-artifact.outputs.artifact-version-java }}
       artifact-image-nodejs: ${{ steps.detect-artifact.outputs.artifact-image-nodejs }}
@@ -38,6 +41,7 @@ jobs:
           Write-Host "::set-output name=image-name-suffix::$($manifest.imageNameSuffix)"
           Write-Host "::set-output name=docker-file::$($manifest.dockerFile)"
           Write-Host "::set-output name=context::$($manifest.context)"
+          Write-Host "::set-output name=platforms::$($manifest.platforms)"
 
           Write-Host "::set-output name=image-name::contrastdotnet.azurecr.io/agent-operator/agent-$($manifest.imageNameSuffix)"
         shell: pwsh
@@ -69,6 +73,7 @@ jobs:
         with:
           file: ${{ steps.load-manifest.outputs.docker-file }}
           context: ${{ steps.load-manifest.outputs.context }}
+          platforms: ${{ steps.load-manifest.outputs.platforms }}
           push: true
           cache-from: ${{ github.actor != 'dependabot[bot]' && format('type=registry,ref={0}:cache', steps.load-manifest.outputs.image-name) || ''}}
           cache-to: ${{ github.actor != 'dependabot[bot]' && format('type=registry,ref={0}:cache,mode=max', steps.load-manifest.outputs.image-name) || ''}}
@@ -94,6 +99,9 @@ jobs:
         - type: dotnet-core
           digest: ${{ needs.build.outputs.artifact-image-dotnet-core }}
           version: ${{ needs.build.outputs.artifact-version-dotnet-core }}
+        - type: dotnet-framework
+          digest: ${{ needs.build.outputs.artifact-image-dotnet-framework }}
+          version: ${{ needs.build.outputs.artifact-version-dotnet-framework }}
         - type: java
           digest: ${{ needs.build.outputs.artifact-image-java }}
           version: ${{ needs.build.outputs.artifact-version-java }}
@@ -134,6 +142,7 @@ jobs:
             Images built:
             ```
             dotnet-core: ${{ needs.build.outputs.artifact-image-dotnet-core }}
+            dotnet-framework: ${{ needs.build.outputs.artifact-image-dotnet-framework }}
             java: ${{ needs.build.outputs.artifact-image-java }}
             nodejs: ${{ needs.build.outputs.artifact-image-nodejs }}
             php: ${{ needs.build.outputs.artifact-image-php }}
@@ -153,6 +162,9 @@ jobs:
         - type: dotnet-core
           digest: ${{ needs.build.outputs.artifact-image-dotnet-core }}
           version: ${{ needs.build.outputs.artifact-version-dotnet-core }}
+        - type: dotnet-framework
+          digest: ${{ needs.build.outputs.artifact-image-dotnet-framework }}
+          version: ${{ needs.build.outputs.artifact-version-dotnet-framework }}
         - type: java
           digest: ${{ needs.build.outputs.artifact-image-java }}
           version: ${{ needs.build.outputs.artifact-version-java }}
@@ -206,6 +218,9 @@ jobs:
         - type: dotnet-core
           digest: ${{ needs.build.outputs.artifact-image-dotnet-core }}
           version: ${{ needs.build.outputs.artifact-version-dotnet-core }}
+        - type: dotnet-framework
+          digest: ${{ needs.build.outputs.artifact-image-dotnet-framework }}
+          version: ${{ needs.build.outputs.artifact-version-dotnet-framework }}
         - type: java
           digest: ${{ needs.build.outputs.artifact-image-java }}
           version: ${{ needs.build.outputs.artifact-version-java }}

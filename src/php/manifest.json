@@ -3,6 +3,7 @@
   "imageNameSuffix": "php",
   "dockerFile": "src/php/Dockerfile",
   "context": ".",
+  "platforms": "linux/amd64",
   "validation": {
     "enabled": true,
     "expects": [
