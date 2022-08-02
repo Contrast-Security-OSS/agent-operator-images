@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - backport/**
 jobs:
   #
   # Building Stage
@@ -58,9 +59,10 @@ jobs:
           images: ${{ steps.load-manifest.outputs.image-name }}
           tags: |
             type=raw,value=trunk-artifact,enable=${{ github.ref == 'refs/heads/master' }}
+            type=raw,value=backport-artifact,enable=${{ startsWith(github.ref, 'refs/heads/backport/') }}
             type=raw,value=pr-artifact,enable=${{ github.event_name == 'pull_request' }}
           labels: |
-            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.revision=${{ steps.load-manifest.outputs.version }}
 
       - uses: docker/login-action@v2
         with:
@@ -176,7 +178,7 @@ jobs:
           version: ${{ needs.build.outputs.artifact-version-php }}
     concurrency:
       group: internal-${{ matrix.variants.type }}
-    if: ${{ github.ref == 'refs/heads/master' }}
+    if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/backport/') }}
     steps:
       - uses: actions/checkout@v3
       - name: Login (Azure)
@@ -191,12 +193,11 @@ jobs:
         with:
           images: contrastdotnet.azurecr.io/agent-operator/agent-${{ matrix.variants.type }}
           tags: |
-            type=semver,pattern={{version}},value=${{ matrix.variants.version }}
-            type=semver,pattern={{major}}.{{minor}},value=${{ matrix.variants.version }}
-            type=semver,pattern={{major}},value=${{ matrix.variants.version }}
-
+            type=semver,pattern={{version}},value=${{ matrix.variants.version }},enable=${{ github.ref == 'refs/heads/master' }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ matrix.variants.version }},enable=${{ github.ref == 'refs/heads/master' }}
+            type=semver,pattern={{major}},value=${{ matrix.variants.version }},enable=${{ github.ref == 'refs/heads/master' }}
             type=raw,value=${{ matrix.variants.version }}
-            type=raw,value=latest
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
       - name: Tag for Release
         uses: akhilerm/tag-push-action@v2.0.0
         with:
@@ -252,11 +253,11 @@ jobs:
         with:
           images: docker.io/contrast/agent-${{ matrix.variants.type }}
           tags: |
-            type=semver,pattern={{version}},value=${{ matrix.variants.version }}
-            type=semver,pattern={{major}}.{{minor}},value=${{ matrix.variants.version }}
-            type=semver,pattern={{major}},value=${{ matrix.variants.version }}
+            type=semver,pattern={{version}},value=${{ matrix.variants.version }},enable=${{ github.ref == 'refs/heads/master' }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ matrix.variants.version }},enable=${{ github.ref == 'refs/heads/master' }}
+            type=semver,pattern={{major}},value=${{ matrix.variants.version }},enable=${{ github.ref == 'refs/heads/master' }}
             type=raw,value=${{ matrix.variants.version }}
-            type=raw,value=latest
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
       - name: Tag for Release
         uses: akhilerm/tag-push-action@v2.0.0
         with:
