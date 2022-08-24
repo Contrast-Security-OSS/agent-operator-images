@@ -136,8 +136,11 @@ jobs:
       - build
       - test
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'pull_request' }}
+    if: ${{ always() && github.event_name == 'pull_request' }}
     steps:
+      - name: Ensure Build Success
+        if: ${{ needs.test.result != 'success' }}
+        run: exit 1
       - name: Create Digest Comment
         uses: peter-evans/create-or-update-comment@v2
         if: ${{ github.actor != 'dependabot[bot]' }}
