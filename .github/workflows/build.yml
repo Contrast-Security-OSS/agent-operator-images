@@ -17,6 +17,7 @@ jobs:
           - dotnet-framework
           - java
           - nodejs
+          - nodejs-protect
           - php
     runs-on: ubuntu-latest
     outputs:
