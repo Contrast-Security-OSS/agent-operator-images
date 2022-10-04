@@ -7,7 +7,7 @@
   "validation": {
     "enabled": true,
     "expects": [
-      "node_modules/@contrast/nodejs-protect/lib/index.js",
+      "node_modules/@contrast/protect-agent/lib/index.js",
       "image-manifest.json"
     ]
   }
