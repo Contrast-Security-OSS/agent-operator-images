@@ -1,0 +1,14 @@
+{
+  "version": "5.0.0-beta.2",
+  "imageNameSuffix": "nodejs-protect",
+  "dockerFile": "src/nodejs-protect/Dockerfile",
+  "context": ".",
+  "platforms": "linux/amd64",
+  "validation": {
+    "enabled": true,
+    "expects": [
+      "node_modules/@contrast/protect-agent/lib/index.js",
+      "image-manifest.json"
+    ]
+  }
+}
