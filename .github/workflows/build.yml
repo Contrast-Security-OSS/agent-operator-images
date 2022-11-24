@@ -215,7 +215,7 @@ jobs:
             type=raw,value=${{ matrix.variants.version }}
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
       - name: Tag for Release
-        uses: akhilerm/tag-push-action@v2.0.0
+        uses: akhilerm/tag-push-action@v2.1.0
         with:
           src: ${{ matrix.variants.digest }}
           dst: |
@@ -286,7 +286,7 @@ jobs:
             type=raw,value=${{ matrix.variants.version }}
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
       - name: Tag for Release
-        uses: akhilerm/tag-push-action@v2.0.0
+        uses: akhilerm/tag-push-action@v2.1.0
         with:
           src: ${{ matrix.variants.digest }}
           dst: |
