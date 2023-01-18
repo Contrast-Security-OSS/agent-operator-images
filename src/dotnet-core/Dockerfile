@@ -17,11 +17,18 @@ RUN set -xe \
 
 FROM busybox:stable AS final
 
+RUN set -xe \
+  && addgroup -g 1001 custom-group \
+  && adduser -u 1001 -G custom-group -D -H custom-user
+
 COPY ./src/shared/entrypoint.sh /entrypoint.sh
 COPY --from=builder /contrast /contrast
 
 ARG VERSION=2.1.16
 ENV CONTRAST_MOUNT_PATH=/contrast-init \
-  CONTRAST_VERSION=${VERSION}
+  CONTRAST_VERSION=${VERSION} \
+  CONTRAST_AGENT_TYPE=dotnet-core
+
+USER 1001
 
 ENTRYPOINT [ "/bin/sh", "/entrypoint.sh" ]
