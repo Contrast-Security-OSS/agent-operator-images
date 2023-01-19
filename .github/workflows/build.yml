@@ -47,7 +47,7 @@ jobs:
           Write-Host "::set-output name=context::$($manifest.context)"
           Write-Host "::set-output name=platforms::$($manifest.platforms)"
 
-          Write-Host "::set-output name=image-name::contrastdotnet.azurecr.io/agent-operator/agent-$($manifest.imageNameSuffix)"
+          Write-Host "::set-output name=image-name::ghcr.io/contrast-security-oss/agent-operator-images/agent-$($manifest.imageNameSuffix)"
         shell: pwsh
 
       - uses: docker/setup-buildx-action@v2
@@ -67,9 +67,9 @@ jobs:
 
       - uses: docker/login-action@v2
         with:
-          registry: contrastdotnet.azurecr.io
-          username: ${{ secrets.AZURE_CLIENT_ID }}
-          password: ${{ secrets.AZURE_CLIENT_SECRET }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: docker/build-push-action@v3
         id: build
@@ -124,12 +124,12 @@ jobs:
           version: ${{ needs.build.outputs.artifact-version-php }}
     steps:
       - uses: actions/checkout@v3
-      - name: Login (Azure)
+      - name: Login (Github)
         uses: docker/login-action@v2
         with:
-          registry: contrastdotnet.azurecr.io
-          username: ${{ secrets.AZURE_CLIENT_ID }}
-          password: ${{ secrets.AZURE_CLIENT_SECRET }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Test
         run: |
           docker pull '${{ matrix.variants.digest }}'
@@ -197,17 +197,17 @@ jobs:
     if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/backport/') }}
     steps:
       - uses: actions/checkout@v3
-      - name: Login (Azure)
+      - name: Login (Github)
         uses: docker/login-action@v2
         with:
-          registry: contrastdotnet.azurecr.io
-          username: ${{ secrets.AZURE_CLIENT_ID }}
-          password: ${{ secrets.AZURE_CLIENT_SECRET }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker Meta
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: contrastdotnet.azurecr.io/agent-operator/agent-${{ matrix.variants.type }}
+          images: ghcr.io/agent-operator-images/agent-${{ matrix.variants.type }}
           tags: |
             type=semver,pattern={{version}},value=${{ matrix.variants.version }},enable=${{ github.ref == 'refs/heads/master' }}
             type=semver,pattern={{major}}.{{minor}},value=${{ matrix.variants.version }},enable=${{ github.ref == 'refs/heads/master' }}
@@ -255,12 +255,12 @@ jobs:
     if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/backport/') }}
     steps:
       - uses: actions/checkout@v3
-      - name: Login (Azure)
+      - name: Login (Github)
         uses: docker/login-action@v2
         with:
-          registry: contrastdotnet.azurecr.io
-          username: ${{ secrets.AZURE_CLIENT_ID }}
-          password: ${{ secrets.AZURE_CLIENT_SECRET }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Login (Dockerhub)
         uses: docker/login-action@v2
         with:
