@@ -41,13 +41,14 @@ jobs:
         id: load-manifest
         run: |
           $manifest = Get-Content './src/${{ env.AGENT_TYPE }}/manifest.json' | ConvertFrom-Json
-          Write-Host "::set-output name=version::$($manifest.version)"
-          Write-Host "::set-output name=image-name-suffix::$($manifest.imageNameSuffix)"
-          Write-Host "::set-output name=docker-file::$($manifest.dockerFile)"
-          Write-Host "::set-output name=context::$($manifest.context)"
-          Write-Host "::set-output name=platforms::$($manifest.platforms)"
 
-          Write-Host "::set-output name=image-name::ghcr.io/contrast-security-oss/agent-operator-images/agent-$($manifest.imageNameSuffix)"
+          "version=$($manifest.version)" >> $env:GITHUB_OUTPUT
+          "image-name-suffix=$($manifest.imageNameSuffix)" >> $env:GITHUB_OUTPUT
+          "docker-file=$($manifest.dockerFile)" >> $env:GITHUB_OUTPUT
+          "context=$($manifest.context)" >> $env:GITHUB_OUTPUT
+          "platforms=$($manifest.platforms)" >> $env:GITHUB_OUTPUT
+
+          "image-name=ghcr.io/contrast-security-oss/agent-operator-images/agent-$($manifest.imageNameSuffix)" >> $env:GITHUB_OUTPUT
         shell: pwsh
 
       - uses: docker/setup-buildx-action@v2
@@ -94,8 +95,8 @@ jobs:
         id: detect-artifact
         run: |
           $artifactImage = '${{ steps.load-manifest.outputs.image-name }}@${{ steps.build.outputs.digest }}'
-          Write-Host "::set-output name=artifact-image-${{ env.AGENT_TYPE }}::$artifactImage"
-          Write-Host "::set-output name=artifact-version-${{ env.AGENT_TYPE }}::${{ steps.load-manifest.outputs.version }}"
+          "artifact-image-${{ env.AGENT_TYPE }}=$artifactImage" >> $env:GITHUB_OUTPUT
+          "artifact-version-${{ env.AGENT_TYPE }}=${{ steps.load-manifest.outputs.version }}" >> $env:GITHUB_OUTPUT
         shell: pwsh
   test:
     runs-on: ubuntu-latest
