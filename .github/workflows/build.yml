@@ -206,7 +206,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker Meta
         id: meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           images: ghcr.io/contrast-security-oss/agent-operator-images/agent-${{ matrix.variants.type }}
           tags: |
@@ -275,7 +275,7 @@ jobs:
           password: ${{ secrets.QUAY_PASSWORD }}
       - name: Docker Meta
         id: meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           images: |
             docker.io/contrast/agent-${{ matrix.variants.type }}
