@@ -11,6 +11,7 @@ jobs:
         - type: dotnet-core
           dockerfile: "sample-apps/dotnet-core/Dockerfile"
     runs-on: ubuntu-latest
+    environment: public
     steps:
       - uses: docker/setup-buildx-action@v2
         with:
@@ -32,3 +33,4 @@ jobs:
           file: ${{ matrix.variants.dockerfile }}
           context: '.'
           tags: ${{ steps.meta.outputs.tags }}
+          push: true
