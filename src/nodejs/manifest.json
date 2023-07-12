@@ -1,5 +1,5 @@
 {
-  "version": "4.32.14",
+  "version": "4.32.15",
   "imageNameSuffix": "nodejs",
   "dockerFile": "src/nodejs/Dockerfile",
   "context": ".",
