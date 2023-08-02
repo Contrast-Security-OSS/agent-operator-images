@@ -3,7 +3,7 @@
   "imageNameSuffix": "nodejs-protect",
   "dockerFile": "src/nodejs-protect/Dockerfile",
   "context": ".",
-  "platforms": "linux/amd64",
+  "platforms": "linux/amd64,linux/arm64",
   "validation": {
     "enabled": true,
     "expects": [

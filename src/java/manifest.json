@@ -3,6 +3,7 @@
   "imageNameSuffix": "java",
   "dockerFile": "src/java/Dockerfile",
   "context": ".",
+  "platforms": "linux/amd64,linux/arm64",
   "validation": {
     "enabled": true,
     "expects": [
