@@ -74,10 +74,8 @@ jobs:
             oob-update
           token: ${{ secrets.GH_PR_WRITE_PAT }}
 
-      - uses: peter-evans/enable-pull-request-automerge@v2
+      - name: Enable Pull Request Automerge
         if: steps.create-pr.outputs.pull-request-operation == 'created'
-        with:
-          # Uses the dispatch service user, using the dotnet PAT.
-          token: ${{ secrets.GH_PR_WRITE_PAT }}
-          pull-request-number: ${{ steps.create-pr.outputs.pull-request-number }}
-          merge-method: rebase
+        run: gh pr merge --rebase --auto "${{ steps.create-pr.outputs.pull-request-number }}"
+        env:
+          GH_TOKEN: ${{ secrets.GH_PR_WRITE_PAT }}
