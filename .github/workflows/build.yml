@@ -51,7 +51,13 @@ jobs:
           "image-name=ghcr.io/contrast-security-oss/agent-operator-images/agent-$($manifest.imageNameSuffix)" >> $env:GITHUB_OUTPUT
         shell: pwsh
 
-      - uses: docker/setup-buildx-action@v2
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: arm64
+
+      - name: Setup Buildx
+        uses: docker/setup-buildx-action@v2
         with:
           install: true
           version: latest

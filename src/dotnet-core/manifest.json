@@ -3,13 +3,15 @@
   "imageNameSuffix": "dotnet-core",
   "dockerFile": "src/dotnet-core/Dockerfile",
   "context": ".",
-  "platforms": "linux/amd64",
+  "platforms": "linux/amd64,linux/arm64",
   "validation": {
     "enabled": true,
     "expects": [
       "image-manifest.json",
       "runtimes/linux-x64/native/ContrastProfiler.so",
-      "runtimes/linux-x64/native/ContrastChainLoader.so"
+      "runtimes/linux-x64/native/ContrastChainLoader.so",
+      "runtimes/linux-arm64/native/ContrastProfiler.so",
+      "runtimes/linux-arm64/native/ContrastChainLoader.so"
     ]
   }
 }
