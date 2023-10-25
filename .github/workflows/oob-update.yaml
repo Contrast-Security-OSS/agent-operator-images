@@ -55,7 +55,7 @@ jobs:
         shell: pwsh
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v5
         id: create-pr
         with:
           add-paths: |
