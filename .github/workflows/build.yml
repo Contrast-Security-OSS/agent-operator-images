@@ -78,7 +78,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: docker/build-push-action@v4
+      - uses: docker/build-push-action@v5
         id: build
         with:
           file: ${{ steps.load-manifest.outputs.docker-file }}
