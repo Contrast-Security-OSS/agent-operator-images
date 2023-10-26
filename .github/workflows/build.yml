@@ -84,7 +84,7 @@ jobs:
           file: ${{ steps.load-manifest.outputs.docker-file }}
           context: ${{ steps.load-manifest.outputs.context }}
           platforms: ${{ steps.load-manifest.outputs.platforms }}
-          push: ${{ github.actor != 'dependabot[bot]' }} # dependabot cant push
+          push: ${{ !(github.event_name == 'pull_request' && github.actor == 'dependabot[bot]') }} # dependabot cant push on pr's
           cache-from: ${{ github.actor != 'dependabot[bot]' && format('type=registry,ref={0}:cache', steps.load-manifest.outputs.image-name) || ''}}
           cache-to: ${{ github.actor != 'dependabot[bot]' && format('type=registry,ref={0}:cache,mode=max', steps.load-manifest.outputs.image-name) || ''}}
           build-args: |
@@ -99,7 +99,7 @@ jobs:
 
       - name: Detect Artifact
         id: detect-artifact
-        if: ${{ github.actor != 'dependabot[bot]' }}
+        if: ${{ !(github.event_name == 'pull_request' && github.actor == 'dependabot[bot]') }}
         run: |
           $artifactImage = '${{ steps.load-manifest.outputs.image-name }}@${{ steps.build.outputs.digest }}'
           "artifact-image-${{ env.AGENT_TYPE }}=$artifactImage" >> $env:GITHUB_OUTPUT
@@ -130,7 +130,7 @@ jobs:
         - type: php
           digest: ${{ needs.build.outputs.artifact-image-php }}
           version: ${{ needs.build.outputs.artifact-version-php }}
-    if: ${{ github.actor != 'dependabot[bot]' }}
+    if: ${{ !(github.event_name == 'pull_request' && github.actor == 'dependabot[bot]') }}
     steps:
       - uses: actions/checkout@v4
       - name: Login (Github)
