@@ -1,7 +1,7 @@
 # Contrast Security, Inc licenses this file to you under the Apache 2.0 License.
 # See the LICENSE file in the project root for more information.
 
-FROM ubuntu:bionic AS builder
+FROM ubuntu:jammy AS builder
 
 RUN set -xe \
   && apt-get update \
