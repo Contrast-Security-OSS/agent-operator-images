@@ -18,6 +18,7 @@ jobs:
           - java
           - nodejs
           - php
+          - python
     runs-on: ubuntu-latest
     outputs:
       artifact-image-dotnet-core: ${{ steps.detect-artifact.outputs.artifact-image-dotnet-core }}
@@ -30,6 +31,8 @@ jobs:
       artifact-version-nodejs: ${{ steps.detect-artifact.outputs.artifact-version-nodejs }}
       artifact-image-php: ${{ steps.detect-artifact.outputs.artifact-image-php }}
       artifact-version-php: ${{ steps.detect-artifact.outputs.artifact-version-php }}
+      artifact-image-python: ${{ steps.detect-artifact.outputs.artifact-image-python }}
+      artifact-version-python: ${{ steps.detect-artifact.outputs.artifact-version-python }}
     env:
       AGENT_TYPE: ${{ matrix.variant }}
     steps:
@@ -124,6 +127,9 @@ jobs:
         - type: php
           digest: ${{ needs.build.outputs.artifact-image-php }}
           version: ${{ needs.build.outputs.artifact-version-php }}
+        - type: python
+          digest: ${{ needs.build.outputs.artifact-image-python }}
+          version: ${{ needs.build.outputs.artifact-version-python }}
     if: ${{ !(github.event_name == 'pull_request' && github.actor == 'dependabot[bot]') }}
     steps:
       - uses: actions/checkout@v4
@@ -163,6 +169,7 @@ jobs:
             java: ${{ needs.build.outputs.artifact-image-java }}
             nodejs: ${{ needs.build.outputs.artifact-image-nodejs }}
             php: ${{ needs.build.outputs.artifact-image-php }}
+            python: ${{ needs.build.outputs.artifact-image-python }}
             ```
   #
   # Release Internal Stage
@@ -191,6 +198,9 @@ jobs:
         - type: php
           digest: ${{ needs.build.outputs.artifact-image-php }}
           version: ${{ needs.build.outputs.artifact-version-php }}
+        - type: python
+          digest: ${{ needs.build.outputs.artifact-image-python }}
+          version: ${{ needs.build.outputs.artifact-version-python }}
     concurrency:
       group: internal-${{ matrix.variants.type }}
     if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/backport/') }}
@@ -246,6 +256,9 @@ jobs:
         - type: php
           digest: ${{ needs.build.outputs.artifact-image-php }}
           version: ${{ needs.build.outputs.artifact-version-php }}
+        - type: python
+          digest: ${{ needs.build.outputs.artifact-image-python }}
+          version: ${{ needs.build.outputs.artifact-version-python }}
     concurrency:
       group: public-${{ matrix.variants.type }}
     if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/backport/') }}

@@ -20,7 +20,7 @@ jobs:
           [string] $agentVersion = $clientPayload.version
           [string] $manifestPath = "./src/$agentType/manifest.json"
 
-          if ($agentType -notmatch '^(nodejs|java|dotnet-core|dotnet-framework|php)$')
+          if ($agentType -notmatch '^(nodejs|java|dotnet-core|dotnet-framework|php|python)$')
           {
               Write-Error "Failed to validate agent type."
               exit 1

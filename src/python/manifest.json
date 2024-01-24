@@ -1,0 +1,13 @@
+{
+  "version": "7.2.0",
+  "imageNameSuffix": "python",
+  "dockerFile": "src/python/Dockerfile",
+  "context": ".",
+  "platforms": "linux/amd64",
+  "validation": {
+    "enabled": true,
+    "expects": [
+      "contrast/loader/__init__.py"
+    ]
+  }
+}
