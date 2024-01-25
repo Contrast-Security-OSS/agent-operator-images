@@ -157,7 +157,7 @@ jobs:
         if: ${{ needs.test.result != 'success' }}
         run: exit 1
       - name: Create Digest Comment
-        uses: peter-evans/create-or-update-comment@v3
+        uses: peter-evans/create-or-update-comment@v4
         if: ${{ github.actor != 'dependabot[bot]' }}
         with:
           issue-number: ${{ github.event.pull_request.number }}
