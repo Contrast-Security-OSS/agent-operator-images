@@ -17,7 +17,6 @@ jobs:
           - dotnet-framework
           - java
           - nodejs
-          - nodejs-protect
           - php
     runs-on: ubuntu-latest
     outputs:
@@ -29,8 +28,6 @@ jobs:
       artifact-version-java: ${{ steps.detect-artifact.outputs.artifact-version-java }}
       artifact-image-nodejs: ${{ steps.detect-artifact.outputs.artifact-image-nodejs }}
       artifact-version-nodejs: ${{ steps.detect-artifact.outputs.artifact-version-nodejs }}
-      artifact-image-nodejs-protect: ${{ steps.detect-artifact.outputs.artifact-image-nodejs-protect }}
-      artifact-version-nodejs-protect: ${{ steps.detect-artifact.outputs.artifact-version-nodejs-protect }}
       artifact-image-php: ${{ steps.detect-artifact.outputs.artifact-image-php }}
       artifact-version-php: ${{ steps.detect-artifact.outputs.artifact-version-php }}
     env:
@@ -124,9 +121,6 @@ jobs:
         - type: nodejs
           digest: ${{ needs.build.outputs.artifact-image-nodejs }}
           version: ${{ needs.build.outputs.artifact-version-nodejs }}
-        - type: nodejs-protect
-          digest: ${{ needs.build.outputs.artifact-image-nodejs-protect }}
-          version: ${{ needs.build.outputs.artifact-version-nodejs-protect }}
         - type: php
           digest: ${{ needs.build.outputs.artifact-image-php }}
           version: ${{ needs.build.outputs.artifact-version-php }}
@@ -168,7 +162,6 @@ jobs:
             dotnet-framework: ${{ needs.build.outputs.artifact-image-dotnet-framework }}
             java: ${{ needs.build.outputs.artifact-image-java }}
             nodejs: ${{ needs.build.outputs.artifact-image-nodejs }}
-            nodejs-protect: ${{ needs.build.outputs.artifact-image-nodejs-protect }}
             php: ${{ needs.build.outputs.artifact-image-php }}
             ```
   #
@@ -195,9 +188,6 @@ jobs:
         - type: nodejs
           digest: ${{ needs.build.outputs.artifact-image-nodejs }}
           version: ${{ needs.build.outputs.artifact-version-nodejs }}
-        - type: nodejs-protect
-          digest: ${{ needs.build.outputs.artifact-image-nodejs-protect }}
-          version: ${{ needs.build.outputs.artifact-version-nodejs-protect }}
         - type: php
           digest: ${{ needs.build.outputs.artifact-image-php }}
           version: ${{ needs.build.outputs.artifact-version-php }}
@@ -253,9 +243,6 @@ jobs:
         - type: nodejs
           digest: ${{ needs.build.outputs.artifact-image-nodejs }}
           version: ${{ needs.build.outputs.artifact-version-nodejs }}
-        - type: nodejs-protect
-          digest: ${{ needs.build.outputs.artifact-image-nodejs-protect }}
-          version: ${{ needs.build.outputs.artifact-version-nodejs-protect }}
         - type: php
           digest: ${{ needs.build.outputs.artifact-image-php }}
           version: ${{ needs.build.outputs.artifact-version-php }}
