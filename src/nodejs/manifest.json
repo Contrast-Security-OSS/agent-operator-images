@@ -1,5 +1,5 @@
 {
-  "version": "5.0.5",
+  "version": "5.1.0",
   "imageNameSuffix": "nodejs",
   "dockerFile": "src/nodejs/Dockerfile",
   "context": ".",
@@ -8,6 +8,7 @@
     "enabled": true,
     "expects": [
       "node_modules/@contrast/agent/lib/index.js",
+      "node_modules/@contrast/agent/lib/esm-loader.mjs",
       "image-manifest.json"
     ]
   }
