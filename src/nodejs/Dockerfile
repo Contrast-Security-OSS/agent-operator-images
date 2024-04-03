@@ -1,7 +1,7 @@
 # Contrast Security, Inc licenses this file to you under the Apache 2.0 License.
 # See the LICENSE file in the project root for more information.
 
-FROM node:lts-bookworm-slim AS builder
+FROM node:20.11.1-alpine AS builder
 
 ARG VERSION=4.18.0
 
