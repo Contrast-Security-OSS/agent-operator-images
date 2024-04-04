@@ -1,13 +1,15 @@
 # Contrast Security, Inc licenses this file to you under the Apache 2.0 License.
 # See the LICENSE file in the project root for more information.
 
-FROM node:20.11.1-alpine AS builder
+FROM node:lts-slim AS builder
 
 ARG VERSION=4.18.0
 
 RUN set -xe \
   && mkdir -p /contrast \
   && npm install --prefix /contrast @contrast/agent@${VERSION} \
+  && npm install --prefix /contrast @swc/core@1.3.39 --libc=glibc \
+  && npm install --prefix /contrast @swc/core@1.3.39 --libc=musl \
   && echo "{ \"version\": \"${VERSION}\" }" > /contrast/image-manifest.json
 
 FROM busybox:stable AS final
