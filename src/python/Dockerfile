@@ -1,7 +1,7 @@
 # Contrast Security, Inc licenses this file to you under the Apache 2.0 License.
 # See the LICENSE file in the project root for more information.
 
-FROM python:3.12-slim-bullseye AS builder-312
+FROM python:3.12-slim-bookworm AS builder-312
 
 ARG VERSION=7.2.0
 
@@ -15,7 +15,7 @@ RUN set -xe \
   && pip install --target=/contrast "contrast-agent==${VERSION}" \
   && echo "{ \"version\": \"${VERSION}\" }" > /contrast/image-manifest.json
 
-FROM python:3.11-slim-bullseye AS builder-311
+FROM python:3.11-slim-bookworm AS builder-311
 
 ARG VERSION=7.2.0
 
@@ -29,7 +29,7 @@ RUN set -xe \
   && pip install --target=/contrast "contrast-agent==${VERSION}" \
   && echo "{ \"version\": \"${VERSION}\" }" > /contrast/image-manifest.json
 
-FROM python:3.10-slim-bullseye AS builder-310
+FROM python:3.10-slim-bookworm AS builder-310
 
 ARG VERSION=7.2.0
 
@@ -43,7 +43,7 @@ RUN set -xe \
   && pip install --target=/contrast "contrast-agent==${VERSION}" \
   && echo "{ \"version\": \"${VERSION}\" }" > /contrast/image-manifest.json
 
-FROM python:3.9-slim-bullseye AS builder-39
+FROM python:3.9-slim-bookworm AS builder-39
 
 ARG VERSION=7.2.0
 
@@ -57,7 +57,7 @@ RUN set -xe \
   && pip install --target=/contrast "contrast-agent==${VERSION}" \
   && echo "{ \"version\": \"${VERSION}\" }" > /contrast/image-manifest.json
 
-FROM python:3.8-slim-bullseye AS builder-38
+FROM python:3.8-slim-bookworm AS builder-38
 
 ARG VERSION=7.2.0
 
