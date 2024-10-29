@@ -1,5 +1,5 @@
 {
-  "version": "4.2.25",
+  "version": "4.2.26",
   "imageNameSuffix": "dotnet-core",
   "dockerFile": "src/dotnet-core/Dockerfile",
   "context": ".",
