@@ -48,7 +48,7 @@ jobs:
           "context=$($manifest.context)" >> $env:GITHUB_OUTPUT
           "platforms=$($manifest.platforms)" >> $env:GITHUB_OUTPUT
 
-          "image-name=ghcr.io/contrast-security-oss/agent-operator-images/agent-$($manifest.imageNameSuffix)" >> $env:GITHUB_OUTPUT
+          "image-name=ghcr.io/andersonshatch/agent-operator-images/agent-$($manifest.imageNameSuffix)" >> $env:GITHUB_OUTPUT
         shell: pwsh
 
       - name: Setup QEMU
@@ -93,8 +93,8 @@ jobs:
           labels: |
             org.opencontainers.image.title=agent-operator-images
             org.opencontainers.image.description=Images of agents for the agent-operator.
-            org.opencontainers.image.url=https://github.com/Contrast-Security-OSS/agent-operator-images
-            org.opencontainers.image.source=https://github.com/Contrast-Security-OSS/agent-operator-images
+            org.opencontainers.image.url=https://github.com/andersonshatch/agent-operator-images
+            org.opencontainers.image.source=https://github.com/andersonshatch/agent-operator-images
             org.opencontainers.image.version=${{ steps.load-manifest.outputs.version }}
 
       - name: Detect Artifact
@@ -216,7 +216,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/contrast-security-oss/agent-operator-images/agent-${{ matrix.variants.type }}
+          images: ghcr.io/andersonshatch/agent-operator-images/agent-${{ matrix.variants.type }}
           tags: |
             type=semver,pattern={{version}},value=${{ matrix.variants.version }},enable=${{ github.ref == 'refs/heads/master' }}
             type=semver,pattern={{major}}.{{minor}},value=${{ matrix.variants.version }},enable=${{ github.ref == 'refs/heads/master' }}
