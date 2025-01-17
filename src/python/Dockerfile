@@ -56,17 +56,6 @@ RUN set -xe \
   && pip install --target=/contrast "contrast-agent==${VERSION}" \
   && echo "{ \"version\": \"${VERSION}\" }" > /contrast/image-manifest.json
 
-FROM python:3.8-slim-bookworm AS builder-38
-ARG VERSION=9.8.0
-RUN set -xe \
-  && apt-get update \
-  && apt-get install -y build-essential autoconf
-RUN set -xe \
-  && mkdir -p /contrast \
-  && echo ${VERSION} \
-  && pip install --target=/contrast "contrast-agent==${VERSION}" \
-  && echo "{ \"version\": \"${VERSION}\" }" > /contrast/image-manifest.json
-
 
 FROM busybox:stable AS final
 
@@ -80,7 +69,6 @@ COPY --from=builder-312 /contrast /contrast
 COPY --from=builder-311 /contrast /contrast
 COPY --from=builder-310 /contrast /contrast
 COPY --from=builder-39 /contrast /contrast
-COPY --from=builder-38 /contrast /contrast
 
 ARG VERSION=9.8.0
 ENV CONTRAST_MOUNT_PATH=/contrast-init \
