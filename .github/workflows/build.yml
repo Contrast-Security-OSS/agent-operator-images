@@ -36,7 +36,7 @@ jobs:
     env:
       AGENT_TYPE: ${{ matrix.variant }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Load Manifest
         id: load-manifest
         run: |
@@ -52,19 +52,19 @@ jobs:
         shell: pwsh
 
       - name: Setup QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@53851d14592bedcffcf25ea515637cff71ef929a # v3.3.0
         with:
           platforms: arm64
 
       - name: Setup Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@6524bf65af31da8d45b59e8c27de4bd072b392f5 # v3.8.0
         with:
           install: true
           version: latest
 
       - name: Docker Meta
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96 # v5.6.1
         with:
           images: ${{ steps.load-manifest.outputs.image-name }}
           tags: |
@@ -72,13 +72,13 @@ jobs:
             type=raw,value=backport-artifact,enable=${{ startsWith(github.ref, 'refs/heads/backport/') }}
             type=raw,value=pr-artifact,enable=${{ github.event_name == 'pull_request' }}
 
-      - uses: docker/login-action@v3
+      - uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: docker/build-push-action@v6
+      - uses: docker/build-push-action@ca877d9245402d1537745e0e356eab47c3520991 # v6.13.0
         id: build
         with:
           file: ${{ steps.load-manifest.outputs.docker-file }}
@@ -132,9 +132,9 @@ jobs:
           version: ${{ needs.build.outputs.artifact-version-python }}
     if: ${{ !(github.event_name == 'pull_request' && github.actor == 'dependabot[bot]') }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Login (Github)
-        uses: docker/login-action@v3
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -157,7 +157,7 @@ jobs:
         if: ${{ needs.test.result != 'success' }}
         run: exit 1
       - name: Create Digest Comment
-        uses: peter-evans/create-or-update-comment@v4
+        uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
         if: ${{ github.actor != 'dependabot[bot]' }}
         with:
           issue-number: ${{ github.event.pull_request.number }}
@@ -205,16 +205,16 @@ jobs:
       group: internal-${{ matrix.variants.type }}
     if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/backport/') }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Login (Github)
-        uses: docker/login-action@v3
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker Meta
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96 # v5.6.1
         with:
           images: ghcr.io/contrast-security-oss/agent-operator-images/agent-${{ matrix.variants.type }}
           tags: |
@@ -224,7 +224,7 @@ jobs:
             type=raw,value=${{ matrix.variants.version }}
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
       - name: Tag for Release
-        uses: akhilerm/tag-push-action@v2.2.0
+        uses: akhilerm/tag-push-action@f35ff2cb99d407368b5c727adbcc14a2ed81d509 # v2.2.0
         with:
           src: ${{ matrix.variants.digest }}
           dst: |
@@ -263,27 +263,27 @@ jobs:
       group: public-${{ matrix.variants.type }}
     if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/backport/') }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Login (Github)
-        uses: docker/login-action@v3
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Login (Dockerhub)
-        uses: docker/login-action@v3
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PAT }}
       - name: Login (Quay)
-        uses: docker/login-action@v3
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
         with:
           registry: quay.io
           username: ${{ secrets.QUAY_USERNAME }}
           password: ${{ secrets.QUAY_PASSWORD }}
       - name: Docker Meta
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96 # v5.6.1
         with:
           images: |
             docker.io/contrast/agent-${{ matrix.variants.type }}
@@ -295,7 +295,7 @@ jobs:
             type=raw,value=${{ matrix.variants.version }}
             type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
       - name: Tag for Release
-        uses: akhilerm/tag-push-action@v2.2.0
+        uses: akhilerm/tag-push-action@f35ff2cb99d407368b5c727adbcc14a2ed81d509 # v2.2.0
         with:
           src: ${{ matrix.variants.digest }}
           dst: |
