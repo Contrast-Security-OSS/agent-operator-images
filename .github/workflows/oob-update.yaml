@@ -11,7 +11,7 @@ jobs:
       agent-type: ${{ steps.validate-event.outputs.agent-type }}
       agent-version: ${{ steps.validate-event.outputs.agent-version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Validate Event
         id: validate-event
         run: |
@@ -55,7 +55,7 @@ jobs:
         shell: pwsh
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
         id: create-pr
         with:
           add-paths: |
