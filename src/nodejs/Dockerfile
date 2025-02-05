@@ -8,8 +8,8 @@ ARG VERSION=4.18.0
 RUN set -xe \
   && mkdir -p /contrast \
   && npm install --prefix /contrast @contrast/agent@${VERSION} \
-  && npm install --prefix /contrast @swc/core@1.3.39 --libc=glibc \
-  && npm install --prefix /contrast @swc/core@1.3.39 --libc=musl \
+  && npm install --prefix /contrast @swc/core --libc=glibc \
+  && npm install --prefix /contrast @swc/core --libc=musl \
   && echo "{ \"version\": \"${VERSION}\" }" > /contrast/image-manifest.json
 
 FROM busybox:stable AS final
