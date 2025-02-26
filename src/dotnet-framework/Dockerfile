@@ -15,10 +15,7 @@ RUN set -xe \
   && rsync -aP /tmp/contrast/content/contrastsecurity/* /contrast/ \
   && echo "{ \"version\": \"${VERSION}\" }" > /contrast/image-manifest.json
 
+# We don't currently support Windows containers in the Agent Operator.
+# This image exists purely to make it easier to get the .NET Framework agent files into windows container image.
 FROM mcr.microsoft.com/windows/nanoserver:2004 AS final
-
-# This is an odd image. We don't currently support Windows containers in the Agent Operator,
-# but these images do make other operations easier.
-# So this image exists purely to make it easier to get the .NET Framework agent files into another image.
-
 COPY --from=builder /contrast /contrast

@@ -17,20 +17,23 @@ RUN set -xe \
   && chmod +x /contrast/diagnostics/linux-arm64/contrast-dotnet-diagnostics \
   && echo "{ \"version\": \"${VERSION}\" }" > /contrast/image-manifest.json
 
-FROM busybox:stable AS final
-
+FROM --platform=linux busybox:stable AS final-linux
 RUN set -xe \
   && addgroup -g 1001 custom-group \
   && adduser -u 1001 -G custom-group -D -H custom-user
-
 COPY ./src/shared/entrypoint.sh /entrypoint.sh
 COPY --from=builder /contrast /contrast
-
 ARG VERSION=4.2.8
 ENV CONTRAST_MOUNT_PATH=/contrast-init \
   CONTRAST_VERSION=${VERSION} \
   CONTRAST_AGENT_TYPE=dotnet-core
-
 USER 1001
-
 ENTRYPOINT [ "/bin/sh", "/entrypoint.sh" ]
+
+# We don't currently support Windows containers in the Agent Operator
+# This image exists purely get .NET Core agent files into windows container images.
+FROM --platform=windows/amd64 mcr.microsoft.com/windows/nanoserver:2004 AS final-windows
+COPY --from=builder /contrast /contrast
+
+# Use the correct final image based on targetos
+FROM final-$TARGETOS
