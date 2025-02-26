@@ -3,7 +3,7 @@
   "imageNameSuffix": "dotnet-core",
   "dockerFile": "src/dotnet-core/Dockerfile",
   "context": ".",
-  "platforms": "linux/amd64,linux/arm64",
+  "platforms": "linux/amd64,linux/arm64,windows/amd64",
   "validation": {
     "enabled": true,
     "expects": [
