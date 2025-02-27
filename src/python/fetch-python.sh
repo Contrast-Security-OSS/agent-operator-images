@@ -23,7 +23,7 @@ SCRIPT_DIR=$(dirname "$(realpath "$0")")
 REPO_ROOT="$SCRIPT_DIR/../.."
 DESTINATION=${2:-"$REPO_ROOT/agents/python/$VERSION/"}
 
-PLATFORMS="manylinux_2_17_x86_64 musllinux_1_2_x86_64"
+PLATFORMS="manylinux_2_17_x86_64 manylinux_2_28_aarch64 musllinux_1_2_x86_64 musllinux_1_2_aarch64"
 PYTHON_VERSIONS="39 310 311 312 313"
 
 TEMP_DIR=$(mktemp -d)
