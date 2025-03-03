@@ -30,6 +30,14 @@ TEMP_DIR=$(mktemp -d)
 
 for platform in $PLATFORMS; do
     for py_version in $PYTHON_VERSIONS; do
+        if [[ "$platform" == "musl"* && ("$py_version" == "39" || "$py_version" == "310") ]]; then
+            # In python 3.10 and earlier, musl builds and glibc C extension builds have
+            # the same filename. This causes some binaries to be overwritten when
+            # combined into a single directory.
+            # See https://github.com/python/cpython/issues/87278
+            echo "Skipping download for $platform $py_version";
+            continue
+        fi
         echo "Downloading wheels for $platform $py_version";
         python3 -m pip download \
         --dest "$TEMP_DIR" \
