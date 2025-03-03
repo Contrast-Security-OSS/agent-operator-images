@@ -44,8 +44,12 @@ mkdir -p "$DESTINATION"
 for file in "$TEMP_DIR"/*.whl; do
     unzip -o "$file" -d "$DESTINATION";
 done
-# if there are any naming conflicts, make sure manylinux versions take priority.
+# HACK: make sure manylinux binaries take priority when there are name conflicts.
 # glibc wheels _might_ work on musl, but not the other way around.
+# In python 3.10 and earlier, musl builds and glibc C extension builds have
+# the same filename. This causes some binaries to be overwritten when
+# combined into a single directory.
+# See https://github.com/python/cpython/issues/87278
 for file in "$TEMP_DIR"/*manylinux*.whl; do
     unzip -o "$file" -d "$DESTINATION";
 done
