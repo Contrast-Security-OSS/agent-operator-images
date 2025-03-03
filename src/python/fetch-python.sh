@@ -23,7 +23,7 @@ SCRIPT_DIR=$(dirname "$(realpath "$0")")
 REPO_ROOT="$SCRIPT_DIR/../.."
 DESTINATION=${2:-"$REPO_ROOT/agents/python/$VERSION/"}
 
-PLATFORMS="manylinux_2_17_x86_64 manylinux_2_28_aarch64 musllinux_1_2_x86_64 musllinux_1_2_aarch64"
+PLATFORMS="musllinux_1_2_x86_64 musllinux_1_2_aarch64 manylinux_2_17_x86_64 manylinux_2_28_aarch64"
 PYTHON_VERSIONS="39 310 311 312 313"
 
 TEMP_DIR=$(mktemp -d)
@@ -42,6 +42,11 @@ done
 
 mkdir -p "$DESTINATION"
 for file in "$TEMP_DIR"/*.whl; do
+    unzip -o "$file" -d "$DESTINATION";
+done
+# if there are any naming conflicts, make sure manylinux versions take priority.
+# glibc wheels _might_ work on musl, but not the other way around.
+for file in "$TEMP_DIR"/*manylinux*.whl; do
     unzip -o "$file" -d "$DESTINATION";
 done
 rm -rf "$TEMP_DIR"
