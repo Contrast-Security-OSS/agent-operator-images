@@ -5,7 +5,7 @@ FROM python:3.9-slim-bookworm AS builder
 ARG VERSION=10.0.2
 RUN set -xe \
   && apt-get update \
-  && apt-get install unzip
+  && apt-get install -y jq unzip
 COPY ./src/python/fetch-python.sh .
 RUN set -xe \
   && mkdir -p /contrast \
