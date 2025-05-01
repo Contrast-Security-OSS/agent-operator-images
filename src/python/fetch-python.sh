@@ -14,8 +14,8 @@ fi
 VERSION=${1:-"latest"}
 if [ "$VERSION" == "latest" ]; then
     VERSION=$(
-        python3 -m pip index versions "contrast-agent" --only-binary :all: \
-        | sed -n 's/.*contrast-agent (\(.*\)).*/\1/p'
+        python3 -m pip index versions --json "contrast-agent" --only-binary :all: \
+        | jq .latest
     )
 fi
 
