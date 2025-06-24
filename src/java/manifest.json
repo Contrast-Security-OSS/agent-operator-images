@@ -1,5 +1,5 @@
 {
-  "version": "6.18.1",
+  "version": "6.19.0",
   "imageNameSuffix": "java",
   "dockerFile": "src/java/Dockerfile",
   "context": ".",
