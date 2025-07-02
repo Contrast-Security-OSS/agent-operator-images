@@ -19,6 +19,7 @@ jobs:
           - nodejs
           - php
           - python
+          - dummy
     runs-on: ubuntu-latest
     outputs:
       artifact-image-dotnet-core: ${{ steps.detect-artifact.outputs.artifact-image-dotnet-core }}
@@ -33,6 +34,8 @@ jobs:
       artifact-version-php: ${{ steps.detect-artifact.outputs.artifact-version-php }}
       artifact-image-python: ${{ steps.detect-artifact.outputs.artifact-image-python }}
       artifact-version-python: ${{ steps.detect-artifact.outputs.artifact-version-python }}
+      artifact-image-dummy: ${{ steps.detect-artifact.outputs.artifact-image-dummy }}
+      artifact-version-dummy: ${{ steps.detect-artifact.outputs.artifact-version-dummy }}
     env:
       AGENT_TYPE: ${{ matrix.variant }}
     steps:
@@ -130,6 +133,9 @@ jobs:
         - type: python
           digest: ${{ needs.build.outputs.artifact-image-python }}
           version: ${{ needs.build.outputs.artifact-version-python }}
+        - type: dummy
+          digest: ${{ needs.build.outputs.artifact-image-dummy }}
+          version: ${{ needs.build.outputs.artifact-version-dummy }}
     if: ${{ !(github.event_name == 'pull_request' && github.actor == 'dependabot[bot]') }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -201,6 +207,9 @@ jobs:
         - type: python
           digest: ${{ needs.build.outputs.artifact-image-python }}
           version: ${{ needs.build.outputs.artifact-version-python }}
+        - type: dummy
+          digest: ${{ needs.build.outputs.artifact-image-dummy }}
+          version: ${{ needs.build.outputs.artifact-version-dummy }}
     concurrency:
       group: internal-${{ matrix.variants.type }}
     if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/backport/') }}
@@ -259,6 +268,9 @@ jobs:
         - type: python
           digest: ${{ needs.build.outputs.artifact-image-python }}
           version: ${{ needs.build.outputs.artifact-version-python }}
+        - type: dummy
+          digest: ${{ needs.build.outputs.artifact-image-dummy }}
+          version: ${{ needs.build.outputs.artifact-version-dummy }}
     concurrency:
       group: public-${{ matrix.variants.type }}
     if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/heads/backport/') }}

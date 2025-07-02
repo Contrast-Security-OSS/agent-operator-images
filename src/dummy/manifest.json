@@ -1,0 +1,13 @@
+{
+  "version": "0.0.1",
+  "imageNameSuffix": "dummy",
+  "dockerFile": "src/dummy/Dockerfile",
+  "context": ".",
+  "platforms": "linux/amd64,linux/arm64",
+  "validation": {
+    "enabled": true,
+    "expects": [
+      "image-manifest.json"
+    ]
+  }
+}
