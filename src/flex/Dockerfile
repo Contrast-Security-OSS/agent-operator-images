@@ -19,8 +19,8 @@ RUN set -xe \
 # Create user (required for the agents command to work), generate comms files, enable auto-attach
 RUN set -xe \
   && /contrast/service/x86_64/contrast-flex-service install-user \
-  && /contrast/service/x86_64/contrast-flex-service --comms-dir "/contrast/comms" --agents-dir "/contrast/agents" agents \
-  && /contrast/service/x86_64/contrast-flex-service --comms-dir "/contrast/comms" --agents-dir "/contrast/agents" auto-attach set true
+  && /contrast/service/x86_64/contrast-flex-service --comms-parent-dir "/contrast" --agents-parent-dir "/contrast" agents \
+  && /contrast/service/x86_64/contrast-flex-service --comms-parent-dir "/contrast" --agents-parent-dir "/contrast" auto-attach set true
 
 FROM --platform=linux/amd64 busybox:stable AS final-amd64
 RUN set -xe \
