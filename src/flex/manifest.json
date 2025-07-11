@@ -1,5 +1,5 @@
 {
-  "version": "0.6.0",
+  "version": "0.8.0",
   "imageNameSuffix": "flex",
   "dockerFile": "src/flex/Dockerfile",
   "context": ".",
@@ -9,12 +9,12 @@
     "expects": [
       "image-manifest.json",
       "injector/agent_injector.so",
-      "comms/flex_agent.auto_attach",
-      "comms/dotnet-core-arm64-default",
-      "comms/dotnet-core-x64-default",
-      "comms/java-default",
-      "comms/node-default",
-      "comms/python-default"
+      "flex-comms/flex_agent.auto_attach",
+      "flex-comms/dotnet-core-arm64-default",
+      "flex-comms/dotnet-core-x64-default",
+      "flex-comms/java-default",
+      "flex-comms/node-default",
+      "flex-comms/python-default"
     ]
   }
 }
