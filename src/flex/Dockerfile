@@ -7,7 +7,7 @@ RUN set -xe \
   && apt-get update \
   && apt-get install -y curl
 
-ARG VERSION=0.6.0
+ARG VERSION=0.8.0
 
 # Download the flex-agent package, untar
 RUN set -xe \
