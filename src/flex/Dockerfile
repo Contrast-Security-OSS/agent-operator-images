@@ -30,7 +30,7 @@ COPY ./src/shared/entrypoint.sh /entrypoint.sh
 COPY --from=builder /contrast /contrast
 RUN mkdir -p /contrast/injector \
     && cp /contrast/service/x86_64/agent_injector.so /contrast/injector
-ARG VERSION=0.6.0
+ARG VERSION=0.8.0
 ENV CONTRAST_MOUNT_PATH=/contrast-init \
   CONTRAST_VERSION=${VERSION} \
   CONTRAST_AGENT_TYPE=flex
@@ -45,7 +45,7 @@ COPY ./src/shared/entrypoint.sh /entrypoint.sh
 COPY --from=builder /contrast /contrast
 RUN mkdir -p /contrast/injector \
     && cp /contrast/service/aarch64/agent_injector.so /contrast/injector
-ARG VERSION=0.6.0
+ARG VERSION=0.8.0
 ENV CONTRAST_MOUNT_PATH=/contrast-init \
   CONTRAST_VERSION=${VERSION} \
   CONTRAST_AGENT_TYPE=flex
