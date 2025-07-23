@@ -10,7 +10,7 @@ RUN set -xe \
 ARG VERSION=4.2.8
 
 RUN set -xe \
-  && curl --retry 3 --retry-all-errors --retry-delay 120 --fail --location https://www.nuget.org/api/v2/package/Contrast.SensorsNetCore/${VERSION} --output /tmp/contrast.zip \
+  && curl --retry 5 --retry-all-errors --retry-delay 120 --fail --location https://www.nuget.org/api/v2/package/Contrast.SensorsNetCore/${VERSION} --output /tmp/contrast.zip \
   && unzip /tmp/contrast.zip -d /tmp/contrast \
   && rsync -aP /tmp/contrast/contentFiles/any/netstandard2.0/contrast/* /contrast/ \
   && chmod +x /contrast/diagnostics/linux-x64/contrast-dotnet-diagnostics \
