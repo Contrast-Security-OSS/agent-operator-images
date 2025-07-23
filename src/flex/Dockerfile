@@ -11,7 +11,7 @@ ARG VERSION=0.8.0
 
 # Download the flex-agent package, untar
 RUN set -xe \
-  && curl --retry 3 --retry-all-errors --retry-delay 120 --fail --location https://pkg.contrastsecurity.com/artifactory/flex-agent-release/${VERSION}/contrast-flex-agent.tar.gz --output /tmp/contrast-flex-agent.tar.gz \
+  && curl --retry 5 --retry-all-errors --retry-delay 120 --fail --location https://pkg.contrastsecurity.com/artifactory/flex-agent-release/${VERSION}/contrast-flex-agent.tar.gz --output /tmp/contrast-flex-agent.tar.gz \
   && mkdir /contrast \
   && tar -xpzf /tmp/contrast-flex-agent.tar.gz -C /contrast \
   && echo "{ \"version\": \"${VERSION}\" }" > /contrast/image-manifest.json

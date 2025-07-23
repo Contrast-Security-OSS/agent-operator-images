@@ -10,7 +10,7 @@ RUN set -xe \
 ARG VERSION=50.0.18
 
 RUN set -xe \
-  && curl --retry 3 --retry-all-errors --retry-delay 120 --fail --location https://www.nuget.org/api/v2/package/Contrast.NET.Azure.AppService/${VERSION} --output /tmp/contrast.zip \
+  && curl --retry 5 --retry-all-errors --retry-delay 120 --fail --location https://www.nuget.org/api/v2/package/Contrast.NET.Azure.AppService/${VERSION} --output /tmp/contrast.zip \
   && unzip /tmp/contrast.zip -d /tmp/contrast \
   && rsync -aP /tmp/contrast/content/contrastsecurity/* /contrast/ \
   && echo "{ \"version\": \"${VERSION}\" }" > /contrast/image-manifest.json
