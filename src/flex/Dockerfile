@@ -22,6 +22,9 @@ RUN set -xe \
   && /contrast/service/x86_64/contrast-flex-service --comms-parent-dir "/contrast" --agents-parent-dir "/contrast" agents \
   && /contrast/service/x86_64/contrast-flex-service --comms-parent-dir "/contrast" --agents-parent-dir "/contrast" auto-attach set true
 
+# Adjust the absolute path provided in PHP agent ini files
+RUN find /usr/bin/contrast-flex-agent/flex-agents/php/*/*/contrast.ini -type f -exec sed -i 's|/usr/bin/contrast-flex-agent/|/contrast/|g' {} \;
+
 FROM --platform=linux/amd64 busybox:stable AS final-amd64
 RUN set -xe \
   && addgroup -g 1001 custom-group \
