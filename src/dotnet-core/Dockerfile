@@ -23,8 +23,9 @@ RUN set -xe \
   && adduser -u 1001 -G custom-group -D -H custom-user
 COPY ./src/shared/entrypoint.sh /entrypoint.sh
 COPY --from=builder /contrast /contrast
-RUN mkdir -p /contrast/runtimes/linux/native \
-    && cp /contrast/runtimes/linux-x64/native/ContrastChainLoader.so /contrast/runtimes/linux/native
+RUN set -xe \
+  && mkdir -p /contrast/runtimes/linux/native \
+  && cp /contrast/runtimes/linux-x64/native/ContrastChainLoader.so /contrast/runtimes/linux/native
 ARG VERSION=4.2.8
 ENV CONTRAST_MOUNT_PATH=/contrast-init \
   CONTRAST_VERSION=${VERSION} \
@@ -38,8 +39,9 @@ RUN set -xe \
   && adduser -u 1001 -G custom-group -D -H custom-user
 COPY ./src/shared/entrypoint.sh /entrypoint.sh
 COPY --from=builder /contrast /contrast
-RUN mkdir -p /contrast/runtimes/linux/native \
-    && cp /contrast/runtimes/linux-arm64/native/ContrastChainLoader.so /contrast/runtimes/linux/native
+RUN set -xe \
+  && mkdir -p /contrast/runtimes/linux/native \
+  && cp /contrast/runtimes/linux-arm64/native/ContrastChainLoader.so /contrast/runtimes/linux/native
 ARG VERSION=4.2.8
 ENV CONTRAST_MOUNT_PATH=/contrast-init \
   CONTRAST_VERSION=${VERSION} \
