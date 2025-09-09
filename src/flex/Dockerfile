@@ -22,8 +22,9 @@ RUN set -xe \
   && /contrast/service/x86_64/contrast-flex-service --comms-parent-dir "/contrast" --agents-parent-dir "/contrast" agents \
   && /contrast/service/x86_64/contrast-flex-service --comms-parent-dir "/contrast" --agents-parent-dir "/contrast" auto-attach set true
 
-# Adjust the absolute path provided in PHP agent ini files
-RUN find /usr/bin/contrast-flex-agent/flex-agents/php/*/*/contrast.ini -type f -exec sed -i 's|/usr/bin/contrast-flex-agent/|/contrast/|g' {} \;
+# Adjust the absolute path provided in PHP agent ini files# Fix the path for the php agent, '-exec echo "{}" \;' + 'grep .' gives a non-zero exit code if no files were found
+RUN set -xe \
+  && find /contrast/flex-agents/php/ -name contrast.ini -type f -exec echo "{}" \; -exec sed -i 's|/usr/bin/contrast-flex-agent/|${CONTRAST_MOUNT_PATH}/|g' {} \; | grep .
 
 FROM --platform=linux/amd64 busybox:stable AS final-amd64
 RUN set -xe \
@@ -31,8 +32,9 @@ RUN set -xe \
   && adduser -u 1001 -G custom-group -D -H custom-user
 COPY ./src/shared/entrypoint.sh /entrypoint.sh
 COPY --from=builder /contrast /contrast
-RUN mkdir -p /contrast/injector \
-    && cp /contrast/service/x86_64/agent_injector.so /contrast/injector
+RUN set -xe \
+  && mkdir -p /contrast/injector \
+  && cp /contrast/service/x86_64/agent_injector.so /contrast/injector
 ARG VERSION=0.8.0
 ENV CONTRAST_MOUNT_PATH=/contrast-init \
   CONTRAST_VERSION=${VERSION} \
@@ -46,8 +48,9 @@ RUN set -xe \
   && adduser -u 1001 -G custom-group -D -H custom-user
 COPY ./src/shared/entrypoint.sh /entrypoint.sh
 COPY --from=builder /contrast /contrast
-RUN mkdir -p /contrast/injector \
-    && cp /contrast/service/aarch64/agent_injector.so /contrast/injector
+RUN set -xe \
+  && mkdir -p /contrast/injector \
+  && cp /contrast/service/aarch64/agent_injector.so /contrast/injector
 ARG VERSION=0.8.0
 ENV CONTRAST_MOUNT_PATH=/contrast-init \
   CONTRAST_VERSION=${VERSION} \
