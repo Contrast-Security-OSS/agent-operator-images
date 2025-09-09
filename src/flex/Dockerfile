@@ -22,7 +22,7 @@ RUN set -xe \
   && /contrast/service/x86_64/contrast-flex-service --comms-parent-dir "/contrast" --agents-parent-dir "/contrast" agents \
   && /contrast/service/x86_64/contrast-flex-service --comms-parent-dir "/contrast" --agents-parent-dir "/contrast" auto-attach set true
 
-# Adjust the absolute path provided in PHP agent ini files# Fix the path for the php agent, '-exec echo "{}" \;' + 'grep .' gives a non-zero exit code if no files were found
+# Fix the path for the php agent, '-exec echo "{}" \;' + 'grep .' gives a non-zero exit code if no files were found
 RUN set -xe \
   && find /contrast/flex-agents/php/ -name contrast.ini -type f -exec echo "{}" \; -exec sed -i 's|/usr/bin/contrast-flex-agent/|${CONTRAST_MOUNT_PATH}/|g' {} \; | grep .
 
