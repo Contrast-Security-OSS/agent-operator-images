@@ -7,7 +7,7 @@ RUN set -xe \
   && apt-get update \
   && apt-get install -y curl
 
-ARG VERSION=0.8.0
+ARG VERSION=1.6.0
 
 # Download the flex-agent package, untar
 RUN set -xe \
@@ -18,9 +18,9 @@ RUN set -xe \
 
 # Create user (required for the agents command to work), generate comms files, enable auto-attach
 RUN set -xe \
-  && /contrast/service/x86_64/contrast-flex-service install-user \
-  && /contrast/service/x86_64/contrast-flex-service --comms-parent-dir "/contrast" --agents-parent-dir "/contrast" agents \
-  && /contrast/service/x86_64/contrast-flex-service --comms-parent-dir "/contrast" --agents-parent-dir "/contrast" auto-attach set true
+  && /contrast/service/x86_64/contrast-flex install-user \
+  && /contrast/service/x86_64/contrast-flex --comms-parent-dir "/contrast" --agents-parent-dir "/contrast" agents \
+  && /contrast/service/x86_64/contrast-flex --comms-parent-dir "/contrast" --agents-parent-dir "/contrast" auto-attach set true
 
 # Fix the path for the php agent, '-exec echo "{}" \;' + 'grep .' gives a non-zero exit code if no files were found
 RUN set -xe \
@@ -35,7 +35,7 @@ COPY --from=builder /contrast /contrast
 RUN set -xe \
   && mkdir -p /contrast/injector \
   && cp /contrast/service/x86_64/agent_injector.so /contrast/injector
-ARG VERSION=0.8.0
+ARG VERSION=1.6.0
 ENV CONTRAST_MOUNT_PATH=/contrast-init \
   CONTRAST_VERSION=${VERSION} \
   CONTRAST_AGENT_TYPE=flex
@@ -51,7 +51,7 @@ COPY --from=builder /contrast /contrast
 RUN set -xe \
   && mkdir -p /contrast/injector \
   && cp /contrast/service/aarch64/agent_injector.so /contrast/injector
-ARG VERSION=0.8.0
+ARG VERSION=1.6.0
 ENV CONTRAST_MOUNT_PATH=/contrast-init \
   CONTRAST_VERSION=${VERSION} \
   CONTRAST_AGENT_TYPE=flex
