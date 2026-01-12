@@ -7,7 +7,8 @@ RUN set -xe \
   && apt-get update \
   && apt-get install -y curl
 
-ARG VERSION=1.6.0
+ARG VERSION
+RUN test -n "$VERSION" || (echo "VERSION arg not set, pass --build-arg 'VERSION=<version>' to docker build" && false)
 
 # Download the flex-agent package, untar
 RUN set -xe \
@@ -35,7 +36,7 @@ COPY --from=builder /contrast /contrast
 RUN set -xe \
   && mkdir -p /contrast/injector \
   && cp /contrast/service/x86_64/agent_injector.so /contrast/injector
-ARG VERSION=1.6.0
+ARG VERSION
 ENV CONTRAST_MOUNT_PATH=/contrast-init \
   CONTRAST_VERSION=${VERSION} \
   CONTRAST_AGENT_TYPE=flex
@@ -51,7 +52,7 @@ COPY --from=builder /contrast /contrast
 RUN set -xe \
   && mkdir -p /contrast/injector \
   && cp /contrast/service/aarch64/agent_injector.so /contrast/injector
-ARG VERSION=1.6.0
+ARG VERSION
 ENV CONTRAST_MOUNT_PATH=/contrast-init \
   CONTRAST_VERSION=${VERSION} \
   CONTRAST_AGENT_TYPE=flex

@@ -3,7 +3,8 @@
 
 FROM node:lts-slim AS builder
 
-ARG VERSION=4.18.0
+ARG VERSION
+RUN test -n "$VERSION" || (echo "VERSION arg not set, pass --build-arg 'VERSION=<version>' to docker build" && false)
 
 RUN set -xe \
   && mkdir -p /contrast \
@@ -21,7 +22,7 @@ RUN set -xe \
 COPY ./src/shared/entrypoint.sh /entrypoint.sh
 COPY --from=builder /contrast /contrast
 
-ARG VERSION=4.18.0
+ARG VERSION
 ENV CONTRAST_MOUNT_PATH=/contrast-init \
   CONTRAST_VERSION=${VERSION} \
   CONTRAST_AGENT_TYPE=nodejs

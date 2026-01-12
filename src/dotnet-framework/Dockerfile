@@ -7,7 +7,8 @@ RUN set -xe \
   && apt-get update \
   && apt-get install -y curl unzip rsync
 
-ARG VERSION=50.0.18
+ARG VERSION
+RUN test -n "$VERSION" || (echo "VERSION arg not set, pass --build-arg 'VERSION=<version>' to docker build" && false)
 
 RUN set -xe \
   && curl --retry 5 --retry-all-errors --retry-delay 120 --fail --location https://www.nuget.org/api/v2/package/Contrast.NET.Azure.AppService/${VERSION} --output /tmp/contrast.zip \

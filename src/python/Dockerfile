@@ -2,11 +2,16 @@
 # See the LICENSE file in the project root for more information.
 
 FROM python:3.9-slim-bookworm AS builder
-ARG VERSION=10.22.2
+
 RUN set -xe \
   && apt-get update \
   && apt-get install -y curl jq unzip
+
 COPY ./src/python/fetch-python.sh .
+
+ARG VERSION
+RUN test -n "$VERSION" || (echo "VERSION arg not set, pass --build-arg 'VERSION=<version>' to docker build" && false)
+
 RUN set -xe \
   && mkdir -p /contrast \
   && echo ${VERSION} \
@@ -23,7 +28,7 @@ RUN set -xe \
 COPY ./src/shared/entrypoint.sh /entrypoint.sh
 COPY --from=builder /contrast /contrast
 
-ARG VERSION=10.22.2
+ARG VERSION
 ENV CONTRAST_MOUNT_PATH=/contrast-init \
   CONTRAST_VERSION=${VERSION} \
   CONTRAST_AGENT_TYPE=python

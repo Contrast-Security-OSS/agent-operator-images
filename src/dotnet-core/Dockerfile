@@ -7,7 +7,8 @@ RUN set -xe \
   && apt-get update \
   && apt-get install -y curl unzip rsync
 
-ARG VERSION=4.2.8
+ARG VERSION
+RUN test -n "$VERSION" || (echo "VERSION arg not set, pass --build-arg 'VERSION=<version>' to docker build" && false)
 
 RUN set -xe \
   && curl --retry 5 --retry-all-errors --retry-delay 120 --fail --location https://www.nuget.org/api/v2/package/Contrast.SensorsNetCore/${VERSION} --output /tmp/contrast.zip \
@@ -26,7 +27,7 @@ COPY --from=builder /contrast /contrast
 RUN set -xe \
   && mkdir -p /contrast/runtimes/linux/native \
   && cp /contrast/runtimes/linux-x64/native/ContrastChainLoader.so /contrast/runtimes/linux/native
-ARG VERSION=4.2.8
+ARG VERSION
 ENV CONTRAST_MOUNT_PATH=/contrast-init \
   CONTRAST_VERSION=${VERSION} \
   CONTRAST_AGENT_TYPE=dotnet-core
@@ -42,7 +43,7 @@ COPY --from=builder /contrast /contrast
 RUN set -xe \
   && mkdir -p /contrast/runtimes/linux/native \
   && cp /contrast/runtimes/linux-arm64/native/ContrastChainLoader.so /contrast/runtimes/linux/native
-ARG VERSION=4.2.8
+ARG VERSION
 ENV CONTRAST_MOUNT_PATH=/contrast-init \
   CONTRAST_VERSION=${VERSION} \
   CONTRAST_AGENT_TYPE=dotnet-core
