@@ -5,52 +5,71 @@ set -o pipefail
 set -o errexit
 
 if [ "${1-}" == "--help" ] || [ "${1-}" == "-h" ]; then
-    echo "Usage: $0 [version] [destination]"
-    echo "  [version]      : Optional. The version of the contrast-agent to download (e.g., 'latest' or '1.2.3'). Defaults to latest."
+    echo "Usage: $0 version [destination]"
+    echo "  version        : Required. The version of the contrast-agent to download (e.g., '1.2.3')."
     echo "  [destination]  : Optional. The directory to save the downloaded files. Defaults to /agents/python/{version}/."
     exit 1
 fi
 
-VERSION=${1:-"latest"}
-if [ "$VERSION" == "latest" ]; then
-    VERSION=$(
-        python3 -m pip index versions --json "contrast-agent" --only-binary :all: \
-        | jq .latest
-    )
-fi
+VERSION=$1
 
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
 REPO_ROOT="$SCRIPT_DIR/../.."
 DESTINATION=${2:-"$REPO_ROOT/agents/python/$VERSION/"}
 
-PLATFORMS="manylinux_2_17_x86_64 manylinux_2_28_aarch64 musllinux_1_2_x86_64 musllinux_1_2_aarch64"
-PYTHON_VERSIONS="39 310 311 312 313"
+PACKAGE_NAME="contrast-agent-bundle"
+PACKAGE_FILENAME_PREFIX="contrast_agent_bundle-$VERSION"
+BASE_URL="https://pypi.org/simple"
 
+echo "Searching for $PACKAGE_NAME version $VERSION..."
+
+JSON_DATA=$(curl -s -L \
+    -H "Accept: application/vnd.pypi.simple.v1+json" \
+    "$BASE_URL/$PACKAGE_NAME/")
+
+VERSION_EXISTS=$(echo "$JSON_DATA" | jq -r --arg ver "$VERSION" '
+    .versions | contains([$ver])
+')
+
+if [ "$VERSION_EXISTS" != "true" ]; then
+    echo "Error: Version '$VERSION' not found in the available versions list."
+    echo "Available versions: $(echo "$JSON_DATA" | jq -r '.versions | join(", ")')"
+    exit 1
+fi
+
+# We look for filenames that match the prefix "package-version"
+# Note: PyPI uses PEP 440 versioning; files usually follow {name}-{version}-{tags}
+FILE_INFO=$(echo "$JSON_DATA" | jq -r --arg prefix "$PACKAGE_FILENAME_PREFIX" '
+    .files[] |
+    select(.filename | startswith($prefix + "-")) |
+    .url + " " + .filename + " " + .hashes.sha256
+')
+
+if [ -z "$FILE_INFO" ]; then
+    echo "No files found for version $VERSION."
+    exit 1
+fi
+
+# Download files
 TEMP_DIR=$(mktemp -d)
-
-for platform in $PLATFORMS; do
-    for py_version in $PYTHON_VERSIONS; do
-        if [[ "$platform" == "musl"* && ("$py_version" == "39" || "$py_version" == "310") ]]; then
-            # In python 3.10 and earlier, musl builds and glibc C extension builds have
-            # the same filename. This causes some binaries to be overwritten when
-            # combined into a single directory.
-            # See https://github.com/python/cpython/issues/87278
-            echo "Skipping download for $platform $py_version";
-            continue
-        fi
-        echo "Downloading wheels for $platform $py_version";
-        python3 -m pip download \
-        --dest "$TEMP_DIR" \
-        --only-binary :all: \
-        --platform "$platform" \
-        --python-version "$py_version" \
-        "contrast-agent==$VERSION";
-    done
+echo "$FILE_INFO" | while read -r url filename remote_hash; do
+    echo "Downloading $filename..."
+    curl -L "$url" -o "$TEMP_DIR/$filename"
+    echo "Verifying SHA256..."
+    ACTUAL_HASH=$(sha256sum "$TEMP_DIR/$filename" | awk '{print $1}')
+    if [ "$ACTUAL_HASH" = "$remote_hash" ]; then
+        echo "Verification successful!"
+    else
+        echo "ERROR: Checksum mismatch for $filename!"
+        echo "Expected: $remote_hash"
+        echo "Actual:   $ACTUAL_HASH"
+        exit 1
+    fi
 done
 
 mkdir -p "$DESTINATION"
 for file in "$TEMP_DIR"/*.whl; do
-    unzip -o "$file" -d "$DESTINATION";
+    unzip "$file" -d "$DESTINATION";
 done
 rm -rf "$TEMP_DIR"
 

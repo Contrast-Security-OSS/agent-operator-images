@@ -2,10 +2,10 @@
 # See the LICENSE file in the project root for more information.
 
 FROM python:3.9-slim-bookworm AS builder
-ARG VERSION=10.0.2
+ARG VERSION=10.22.2
 RUN set -xe \
   && apt-get update \
-  && apt-get install -y jq unzip
+  && apt-get install -y curl jq unzip
 COPY ./src/python/fetch-python.sh .
 RUN set -xe \
   && mkdir -p /contrast \
@@ -23,7 +23,7 @@ RUN set -xe \
 COPY ./src/shared/entrypoint.sh /entrypoint.sh
 COPY --from=builder /contrast /contrast
 
-ARG VERSION=10.0.2
+ARG VERSION=10.22.2
 ENV CONTRAST_MOUNT_PATH=/contrast-init \
   CONTRAST_VERSION=${VERSION} \
   CONTRAST_AGENT_TYPE=python
