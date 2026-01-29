@@ -15,7 +15,7 @@ Public images are deployed to DockerHub. Currently, this repo publishes:
 - [![contrast/agent-nodejs](https://img.shields.io/docker/v/contrast/agent-nodejs?label=contrast%2Fagent-nodejs&logo=docker&logoColor=white&style=flat-square&cacheSeconds=10800)](https://hub.docker.com/r/contrast/agent-nodejs)
 - [![contrast/agent-php](https://img.shields.io/docker/v/contrast/agent-php?label=contrast%2Fagent-php&logo=docker&logoColor=white&style=flat-square&cacheSeconds=10800)](https://hub.docker.com/r/contrast/agent-php)
 - [![contrast/agent-python](https://img.shields.io/docker/v/contrast/agent-python?label=contrast%2Fagent-python&logo=docker&logoColor=white&style=flat-square&cacheSeconds=10800)](https://hub.docker.com/r/contrast/agent-python)
-- - [![contrast/agent-flex](https://img.shields.io/docker/v/contrast/agent-flex?label=contrast%2Fagent-flex&logo=docker&logoColor=white&style=flat-square&cacheSeconds=10800)](https://hub.docker.com/r/contrast/agent-flex)
+- [![contrast/agent-flex](https://img.shields.io/docker/v/contrast/agent-flex?label=contrast%2Fagent-flex&logo=docker&logoColor=white&style=flat-square&cacheSeconds=10800)](https://hub.docker.com/r/contrast/agent-flex)
 
 
 Tags are generated in the following format:
