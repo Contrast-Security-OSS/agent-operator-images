@@ -17,9 +17,8 @@ RUN set -xe \
   && tar -xpzf /tmp/contrast-flex-agent.tar.gz -C /contrast \
   && echo "{ \"version\": \"${VERSION}\" }" > /contrast/image-manifest.json
 
-# Create user (required for the agents command to work), generate comms files, enable auto-attach
+# Generate comms files, enable auto-attach
 RUN set -xe \
-  && /contrast/service/x86_64/contrast-flex install-user \
   && /contrast/service/x86_64/contrast-flex --comms-parent-dir "/contrast" --agents-parent-dir "/contrast" agents \
   && /contrast/service/x86_64/contrast-flex --comms-parent-dir "/contrast" --agents-parent-dir "/contrast" auto-attach set true
 
