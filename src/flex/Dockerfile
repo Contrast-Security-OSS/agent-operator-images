@@ -1,7 +1,7 @@
 # Contrast Security, Inc licenses this file to you under the Apache 2.0 License.
 # See the LICENSE file in the project root for more information.
 
-FROM --platform=$BUILDPLATFORM ubuntu:noble AS builder
+FROM --platform=$BUILDPLATFORM ubuntu:noble@sha256:c4a8d5503dfb2a3eb8ab5f807da5bc69a85730fb49b5cfca2330194ebcc41c7b AS builder
 
 RUN set -xe \
   && apt-get update \
@@ -26,7 +26,7 @@ RUN set -xe \
 RUN set -xe \
   && find /contrast/flex-agents/php/ -name contrast.ini -type f -exec echo "{}" \; -exec sed -i 's|/usr/bin/contrast-flex-agent/|${CONTRAST_MOUNT_PATH}/|g' {} \; | grep .
 
-FROM --platform=linux/amd64 busybox:stable AS final-amd64
+FROM --platform=linux/amd64 busybox:stable@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662 AS final-amd64
 RUN set -xe \
   && addgroup -g 1001 custom-group \
   && adduser -u 1001 -G custom-group -D -H custom-user
@@ -42,7 +42,7 @@ ENV CONTRAST_MOUNT_PATH=/contrast-init \
 USER 1001
 ENTRYPOINT [ "/bin/sh", "/entrypoint.sh" ]
 
-FROM --platform=linux/arm64 busybox:stable AS final-arm64
+FROM --platform=linux/arm64 busybox:stable@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662 AS final-arm64
 RUN set -xe \
   && addgroup -g 1001 custom-group \
   && adduser -u 1001 -G custom-group -D -H custom-user
