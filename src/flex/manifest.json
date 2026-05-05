@@ -9,6 +9,7 @@
     "expects": [
       "image-manifest.json",
       "injector/agent_injector.so",
+      "flex-comms/contrast_flex_id",
       "flex-comms/flex_agent.auto_attach",
       "flex-comms/dotnet-core-arm64-default",
       "flex-comms/dotnet-core-x64-default",
