@@ -15,6 +15,8 @@
       "flex-comms/dotnet-core-x64-default",
       "flex-comms/java-default",
       "flex-comms/node-default",
+      "flex-comms/php-amd64-default",
+      "flex-comms/php-arm64-default",
       "flex-comms/python-default"
     ]
   }
