@@ -11,9 +11,9 @@ ARG VERSION
 RUN test -n "$VERSION" || (echo "VERSION arg not set, pass --build-arg 'VERSION=<version>' to docker build" && false)
 
 RUN set -xe \
-  && curl --retry 5 --retry-all-errors --retry-delay 120 --fail --location https://www.nuget.org/api/v2/package/Contrast.NET.Azure.AppService/${VERSION} --output /tmp/contrast.zip \
+  && curl --retry 5 --retry-all-errors --retry-delay 120 --fail --location https://www.nuget.org/api/v2/package/Contrast.Agent/${VERSION} --output /tmp/contrast.zip \
   && unzip /tmp/contrast.zip -d /tmp/contrast \
-  && rsync -aP /tmp/contrast/content/contrastsecurity/* /contrast/ \
+  && rsync -aP /tmp/contrast/contentFiles/any/netstandard2.0/contrast/* /contrast/ \
   && echo "{ \"version\": \"${VERSION}\" }" > /contrast/image-manifest.json
 
 # We don't currently support Windows containers in the Agent Operator.
