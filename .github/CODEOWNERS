@@ -1,5 +1,6 @@
 * @Contrast-Security-OSS/dotnet
 
+/src/dotnet/ @Contrast-Security-OSS/dotnet
 /src/dotnet-core/ @Contrast-Security-OSS/dotnet
 /src/dotnet-framework/ @Contrast-Security-OSS/dotnet
 /src/java/ @Contrast-Security-OSS/java-team

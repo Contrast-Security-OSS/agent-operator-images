@@ -11,7 +11,7 @@ ARG VERSION
 RUN test -n "$VERSION" || (echo "VERSION arg not set, pass --build-arg 'VERSION=<version>' to docker build" && false)
 
 RUN set -xe \
-  && curl --retry 5 --retry-all-errors --retry-delay 120 --fail --location https://www.nuget.org/api/v2/package/Contrast.SensorsNetCore/${VERSION} --output /tmp/contrast.zip \
+  && curl --retry 5 --retry-all-errors --retry-delay 120 --fail --location https://www.nuget.org/api/v2/package/Contrast.Agent/${VERSION} --output /tmp/contrast.zip \
   && unzip /tmp/contrast.zip -d /tmp/contrast \
   && rsync -aP /tmp/contrast/contentFiles/any/netstandard2.0/contrast/* /contrast/ \
   && chmod +x /contrast/diagnostics/linux-x64/contrast-dotnet-diagnostics \
@@ -30,7 +30,7 @@ RUN set -xe \
 ARG VERSION
 ENV CONTRAST_MOUNT_PATH=/contrast-init \
   CONTRAST_VERSION=${VERSION} \
-  CONTRAST_AGENT_TYPE=dotnet-core
+  CONTRAST_AGENT_TYPE=dotnet
 USER 1001
 ENTRYPOINT [ "/bin/sh", "/entrypoint.sh" ]
 
@@ -46,12 +46,12 @@ RUN set -xe \
 ARG VERSION
 ENV CONTRAST_MOUNT_PATH=/contrast-init \
   CONTRAST_VERSION=${VERSION} \
-  CONTRAST_AGENT_TYPE=dotnet-core
+  CONTRAST_AGENT_TYPE=dotnet
 USER 1001
 ENTRYPOINT [ "/bin/sh", "/entrypoint.sh" ]
 
 # We don't currently support Windows containers in the Agent Operator
-# This image exists purely get .NET Core agent files into windows container images.
+# This image exists purely get .NET agent files into windows container images.
 FROM --platform=windows/amd64 mcr.microsoft.com/windows/nanoserver:2004 AS final-windows-amd64
 COPY --from=builder /contrast /contrast
 
