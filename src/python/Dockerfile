@@ -1,7 +1,7 @@
 # Contrast Security, Inc licenses this file to you under the Apache 2.0 License.
 # See the LICENSE file in the project root for more information.
 
-FROM python:3.9-slim-bookworm AS builder
+FROM python:3.9-slim-bookworm@sha256:a02e9c5406c416c504d6c9a1a306ff4080c3173f1008d192f953bd20382a2d5c AS builder
 
 RUN set -xe \
   && apt-get update \
@@ -19,7 +19,7 @@ RUN set -xe \
   && echo "{ \"version\": \"${VERSION}\" }" > /contrast/image-manifest.json
 
 
-FROM busybox:stable AS final
+FROM busybox:stable@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662 AS final
 
 RUN set -xe \
   && addgroup -g 1001 custom-group \
