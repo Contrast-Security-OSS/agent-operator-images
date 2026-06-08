@@ -6,11 +6,12 @@ FROM node:lts-slim AS builder
 ARG VERSION
 RUN test -n "$VERSION" || (echo "VERSION arg not set, pass --build-arg 'VERSION=<version>' to docker build" && false)
 
+# Install the @contrast/agent-bundle but move the node_modules up a directory to maintain the old folder structure
 RUN set -xe \
+  && mkdir -p /tmp/contrast \
+  && npm install --prefix /tmp/contrast @contrast/agent-bundle@${VERSION} \
   && mkdir -p /contrast \
-  && npm install --prefix /contrast @contrast/agent@${VERSION} \
-  && npm install --prefix /contrast @swc/core --libc=glibc \
-  && npm install --prefix /contrast @swc/core --libc=musl \
+  && cp --force --recursive /tmp/contrast/node_modules/@contrast/agent-bundle/node_modules /contrast/ \
   && echo "{ \"version\": \"${VERSION}\" }" > /contrast/image-manifest.json
 
 FROM busybox:stable AS final
