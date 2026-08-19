@@ -26,7 +26,7 @@ RUN set -xe \
 RUN set -xe \
   && find /contrast/flex-agents/php/ -name contrast.ini -type f -exec echo "{}" \; -exec sed -i 's|/usr/bin/contrast-flex-agent/|${CONTRAST_MOUNT_PATH}/|g' {} \; | grep .
 
-FROM --platform=linux/amd64 busybox:stable AS final-amd64
+FROM --platform=linux/amd64 busybox:1.37.0@sha256:9db7b59979c38555a39def84a31fb98b5296952f9e3afd4f6f11f05b07adfab0 AS final-amd64
 RUN set -xe \
   && addgroup -g 1001 custom-group \
   && adduser -u 1001 -G custom-group -D -H custom-user
@@ -42,7 +42,7 @@ ENV CONTRAST_MOUNT_PATH=/contrast-init \
 USER 1001
 ENTRYPOINT [ "/bin/sh", "/entrypoint.sh" ]
 
-FROM --platform=linux/arm64 busybox:stable AS final-arm64
+FROM --platform=linux/arm64 busybox:1.37.0@sha256:9db7b59979c38555a39def84a31fb98b5296952f9e3afd4f6f11f05b07adfab0 AS final-arm64
 RUN set -xe \
   && addgroup -g 1001 custom-group \
   && adduser -u 1001 -G custom-group -D -H custom-user

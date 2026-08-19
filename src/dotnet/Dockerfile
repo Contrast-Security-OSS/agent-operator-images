@@ -18,7 +18,7 @@ RUN set -xe \
   && chmod +x /contrast/diagnostics/linux-arm64/contrast-dotnet-diagnostics \
   && echo "{ \"version\": \"${VERSION}\" }" > /contrast/image-manifest.json
 
-FROM --platform=linux/amd64 busybox:stable AS final-linux-amd64
+FROM --platform=linux/amd64 busybox:1.37.0@sha256:9db7b59979c38555a39def84a31fb98b5296952f9e3afd4f6f11f05b07adfab0 AS final-linux-amd64
 RUN set -xe \
   && addgroup -g 1001 custom-group \
   && adduser -u 1001 -G custom-group -D -H custom-user
@@ -34,7 +34,7 @@ ENV CONTRAST_MOUNT_PATH=/contrast-init \
 USER 1001
 ENTRYPOINT [ "/bin/sh", "/entrypoint.sh" ]
 
-FROM --platform=linux/arm64 busybox:stable AS final-linux-arm64
+FROM --platform=linux/arm64 busybox:1.37.0@sha256:9db7b59979c38555a39def84a31fb98b5296952f9e3afd4f6f11f05b07adfab0 AS final-linux-arm64
 RUN set -xe \
   && addgroup -g 1001 custom-group \
   && adduser -u 1001 -G custom-group -D -H custom-user
