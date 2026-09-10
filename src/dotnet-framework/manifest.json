@@ -1,5 +1,5 @@
 {
-  "version": "60.1.4",
+  "version": "60.1.5",
   "imageNameSuffix": "dotnet-framework",
   "dockerFile": "src/dotnet-framework/Dockerfile",
   "context": ".",
