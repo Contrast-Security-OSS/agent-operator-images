@@ -14,7 +14,7 @@ RUN test -n "$VERSION" || (echo "VERSION arg not set, pass --build-arg 'VERSION=
 RUN set -xe \
   && mkdir -p /contrast \
   && curl --location \
-  -H 'Authorization: ${CONTRAST_TOKEN}' \https://repo1.maven.org/maven2/com/contrastsecurity/contrast-agent/${VERSION}/contrast-agent-${VERSION}.jar \
+  -H "Authorization: ${CONTRAST_TOKEN}" \https://repo1.maven.org/maven2/com/contrastsecurity/contrast-agent/${VERSION}/contrast-agent-${VERSION}.jar \
   --output /contrast/contrast-agent.jar \
   && echo "{ \"version\": \"${VERSION}\" }" > /contrast/image-manifest.json
 
