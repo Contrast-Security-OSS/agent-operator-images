@@ -13,15 +13,7 @@ jobs:
     strategy:
       matrix:
         variant:
-          - dotnet
-          - dotnet-core
-          - dotnet-framework
           - java
-          - nodejs
-          - php
-          - python
-          - flex
-          - dummy
     runs-on: ubuntu-latest
     outputs:
       artifact-image-dotnet: ${{ steps.detect-artifact.outputs.artifact-image-dotnet }}
@@ -84,7 +76,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.CONTRAST_CONTRAST_GITHUB_TOKEN }}
+          password: ${{ secrets.CONTRAST_GITHUB_TOKEN }}
 
       - uses: docker/build-push-action@ca877d9245402d1537745e0e356eab47c3520991 # v6.13.0
         id: build
@@ -97,6 +89,7 @@ jobs:
           cache-to: ${{ github.actor != 'dependabot[bot]' && format('type=registry,ref={0}:cache,mode=max', steps.load-manifest.outputs.image-name) || ''}}
           build-args: |
             VERSION=${{ steps.load-manifest.outputs.version }}
+            CONTRAST_TOKEN=${{ secrets.CONTRAST_TOKEN }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: |
             org.opencontainers.image.title=agent-operator-images
