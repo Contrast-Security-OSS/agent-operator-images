@@ -48,7 +48,7 @@ jobs:
           "context=$($manifest.context)" >> $env:GITHUB_OUTPUT
           "platforms=$($manifest.platforms)" >> $env:GITHUB_OUTPUT
 
-          "image-name=ghcr.io/contrast-security-oss/agent-operator-images/agent-$($manifest.imageNameSuffix)" >> $env:GITHUB_OUTPUT
+          "image-name=ghcr.io/${{ github.repository }}/agent-operator-images/agent-$($manifest.imageNameSuffix)" >> $env:GITHUB_OUTPUT
         shell: pwsh
 
       - name: Setup QEMU
