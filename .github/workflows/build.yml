@@ -50,7 +50,6 @@ jobs:
         id: load-manifest
         run: |
           $manifest = Get-Content './src/${{ env.AGENT_TYPE }}/manifest.json' | ConvertFrom-Json
-
           "version=$($manifest.version)" >> $env:GITHUB_OUTPUT
           "image-name-suffix=$($manifest.imageNameSuffix)" >> $env:GITHUB_OUTPUT
           "docker-file=$($manifest.dockerFile)" >> $env:GITHUB_OUTPUT
@@ -85,7 +84,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.CONTRAST_GITHUB_TOKEN }}
+          password: ${{ secrets.CONTRAST_CONTRAST_GITHUB_TOKEN }}
 
       - uses: docker/build-push-action@ca877d9245402d1537745e0e356eab47c3520991 # v6.13.0
         id: build
@@ -156,7 +155,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.CONTRAST_GITHUB_TOKEN }}
       - name: Test
         run: |
           docker pull '${{ matrix.variants.digest }}'
@@ -240,7 +239,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.CONTRAST_GITHUB_TOKEN }}
       - name: Docker Meta
         id: meta
         uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96 # v5.6.1
@@ -307,7 +306,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.CONTRAST_GITHUB_TOKEN }}
       - name: Login (Dockerhub)
         uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
         with:
