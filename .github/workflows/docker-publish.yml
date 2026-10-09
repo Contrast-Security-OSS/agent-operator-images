@@ -43,6 +43,18 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
 
+      - name: Load Manifest
+        id: load-manifest
+        run: |
+          $manifest = Get-Content './src/${{ env.AGENT_TYPE }}/manifest.json' | ConvertFrom-Json
+          "version=$($manifest.version)" >> $env:GITHUB_OUTPUT
+          "image-name-suffix=$($manifest.imageNameSuffix)" >> $env:GITHUB_OUTPUT
+          "docker-file=$($manifest.dockerFile)" >> $env:GITHUB_OUTPUT
+          "context=$($manifest.context)" >> $env:GITHUB_OUTPUT
+          "platforms=$($manifest.platforms)" >> $env:GITHUB_OUTPUT
+
+          "image-name=ghcr.io/${{ github.repository }}/agent-operator-images/agent-$($manifest.imageNameSuffix)" >> $env:GITHUB_OUTPUT
+        shell: pwsh
       - name: Build and push (linux/amd64 + linux/arm64)
         uses: docker/build-push-action@v7
         with:
