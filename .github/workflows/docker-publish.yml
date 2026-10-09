@@ -13,7 +13,6 @@ env:
 
 jobs:
   docker:
-
     strategy:
       matrix:
         variant:
