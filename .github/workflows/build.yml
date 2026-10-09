@@ -6,9 +6,6 @@ on:
       - master
       - backport/**
 jobs:
-  #
-  # Building Stage
-  #
   build:
     strategy:
       matrix:
@@ -92,16 +89,12 @@ jobs:
           "artifact-version-${{ env.AGENT_TYPE }}=${{ steps.load-manifest.outputs.version }}" >> $env:GITHUB_OUTPUT
         shell: pwsh
  
-  # Currently just used for pr's.
   build-succeeded:
     needs:
       - build
     runs-on: ubuntu-latest
     if: ${{ always() && github.event_name == 'pull_request' && github.actor != 'dependabot[bot]' }}
     steps:
-      - name: Ensure Build Success
-        if: ${{ needs.test.result != 'success' }}
-        run: exit 1
       - name: Create Digest Comment
         uses: peter-evans/create-or-update-comment@71345be0265236311c031f5c7866368bd1eff043 # v4.0.0
         if: ${{ github.actor != 'dependabot[bot]' }}
@@ -142,7 +135,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96 # v5.6.1
         with:
-          images: ghcr.io/contrast-security-oss/agent-operator-images/agent-${{ matrix.variants.type }}
+          images: ghcr.io/${{ github.repository }}/contrast-security-oss/agent-operator-images/agent-${{ matrix.variants.type }}
           tags: |
             type=semver,pattern={{version}},value=${{ matrix.variants.version }},enable=${{ github.ref == 'refs/heads/master' }}
             type=semver,pattern={{major}}.{{minor}},value=${{ matrix.variants.version }},enable=${{ github.ref == 'refs/heads/master' }}
