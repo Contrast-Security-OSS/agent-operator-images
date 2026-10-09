@@ -13,6 +13,13 @@ env:
 
 jobs:
   docker:
+
+    strategy:
+      matrix:
+        variant:
+          - java
+    env:
+      AGENT_TYPE: ${{ matrix.variant }}  
     runs-on: ubuntu-latest
     permissions:
       contents: read
