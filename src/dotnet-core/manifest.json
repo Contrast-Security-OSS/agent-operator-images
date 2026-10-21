@@ -1,7 +1,7 @@
 {
-  "version": "5.0.7",
+  "version": "60.2.1",
   "imageNameSuffix": "dotnet-core",
-  "dockerFile": "src/dotnet-core/Dockerfile",
+  "dockerFile": "src/dotnet/Dockerfile",
   "context": ".",
   "platforms": "linux/amd64,linux/arm64,windows/amd64",
   "validation": {

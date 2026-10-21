@@ -1,0 +1,75 @@
+# This is a seperate pipeline because we update three manifests (dotnet, dotnet-core, dotnet-framework)
+name: ".NET OOB Update"
+on:
+  repository_dispatch:
+    types:
+      - dotnet-oob-update
+
+jobs:
+  oob-update:
+    runs-on: ubuntu-latest
+    outputs:
+      agent-type: ${{ steps.validate-event.outputs.agent-type }}
+      agent-version: ${{ steps.validate-event.outputs.agent-version }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Validate Event
+        id: validate-event
+        run: |
+          $clientPayload = '${{ toJSON(github.event.client_payload) }}' | ConvertFrom-Json
+          [string] $agentVersion = $clientPayload.version
+
+          if ($agentVersion -notmatch '^\d+(\.\d+){2,3}$')
+          {
+              Write-Error "Failed to validate agent version."
+              exit 1
+          }
+
+          Write-Host "::set-output name=agent-type::dotnet"
+          Write-Host "::set-output name=agent-version::$agentVersion"
+        shell: pwsh
+
+      - name: Stage Changes
+        id: stage-changes
+        run: |
+          $agentVersion = '${{ steps.validate-event.outputs.agent-version }}'
+          $agentTypes = @('dotnet', 'dotnet-core', 'dotnet-framework')
+          foreach ($agentType in $agentTypes)
+          {
+            $manifestPath = "./src/$agentType/manifest.json"
+
+            $manifest = Get-Content -Path $manifestPath | ConvertFrom-Json
+            Write-Host "::set-output name=old-version::$($manifest.version)"
+
+            $manifest.version = $agentVersion
+            $manifest | ConvertTo-Json | Set-Content -Path $manifestPath -Encoding UTF8
+          }
+        shell: pwsh
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@67ccf781d68cd99b580ae25a5c18a1cc84ffff1f # v7.0.6
+        id: create-pr
+        with:
+          add-paths: |
+            ./src/dotnet/manifest.json
+            ./src/dotnet-core/manifest.json
+            ./src/dotnet-framework/manifest.json
+          commit-message: |
+            Upgraded '${{ steps.validate-event.outputs.agent-type }}' to '${{ steps.validate-event.outputs.agent-version }}'
+          branch: actions/oob-${{ steps.validate-event.outputs.agent-type }}-${{ steps.validate-event.outputs.agent-version }}
+          title: |
+            [OOB] Upgrades '${{ steps.validate-event.outputs.agent-type }}' to '${{ steps.validate-event.outputs.agent-version }}'
+          body: |
+            Automated OOB update requested by ${{ github.actor }}.
+
+            Agent: `${{ steps.validate-event.outputs.agent-type }}`
+            Version: `${{ steps.stage-changes.outputs.old-version }}` -> `${{ steps.validate-event.outputs.agent-version }}`
+          labels: |
+            oob-update
+          token: ${{ secrets.GH_PR_WRITE_PAT }}
+
+      - name: Enable Pull Request Automerge
+        if: steps.create-pr.outputs.pull-request-operation == 'created'
+        run: gh pr merge --rebase --auto "${{ steps.create-pr.outputs.pull-request-number }}"
+        env:
+          GH_TOKEN: ${{ secrets.GH_PR_WRITE_PAT }}

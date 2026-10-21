@@ -6,14 +6,15 @@ FROM node:lts-slim@sha256:03eae3ef7e88a9de535496fb488d67e02b9d96a063a8967bae6577
 ARG VERSION
 RUN test -n "$VERSION" || (echo "VERSION arg not set, pass --build-arg 'VERSION=<version>' to docker build" && false)
 
+# Install the @contrast/agent-bundle but move the node_modules up a directory to maintain the old folder structure
 RUN set -xe \
+  && mkdir -p /tmp/contrast \
+  && npm install --prefix /tmp/contrast @contrast/agent-bundle@${VERSION} \
   && mkdir -p /contrast \
-  && npm install --prefix /contrast @contrast/agent@${VERSION} \
-  && npm install --prefix /contrast @swc/core --libc=glibc \
-  && npm install --prefix /contrast @swc/core --libc=musl \
+  && cp --force --recursive /tmp/contrast/node_modules/@contrast/agent-bundle/node_modules /contrast/ \
   && echo "{ \"version\": \"${VERSION}\" }" > /contrast/image-manifest.json
 
-FROM busybox:stable@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662 AS final
+FROM busybox:1.37.0@sha256:9db7b59979c38555a39def84a31fb98b5296952f9e3afd4f6f11f05b07adfab0 AS final
 
 RUN set -xe \
   && addgroup -g 1001 custom-group \

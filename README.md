@@ -8,15 +8,14 @@ Managed by the Contrast .NET agent team.
 
 Public images are deployed to DockerHub. Currently, this repo publishes:
 
-
-- [![contrast/agent-dotnet-core](https://img.shields.io/docker/v/contrast/agent-dotnet-core?label=contrast%2Fagent-dotnet-core&logo=docker&logoColor=white&style=flat-square&cacheSeconds=10800)](https://hub.docker.com/r/contrast/agent-dotnet-core)
-- [![contrast/agent-dotnet-framework](https://img.shields.io/docker/v/contrast/agent-dotnet-framework?label=contrast%2Fagent-dotnet-framework&logo=docker&logoColor=white&style=flat-square&cacheSeconds=10800)](https://hub.docker.com/r/contrast/agent-dotnet-framework)
+- [![contrast/agent-dotnet](https://img.shields.io/docker/v/contrast/agent-dotnet?label=contrast%2Fagent-dotnet&logo=docker&logoColor=white&style=flat-square&cacheSeconds=10800)](https://hub.docker.com/r/contrast/agent-dotnet)
 - [![contrast/agent-java](https://img.shields.io/docker/v/contrast/agent-java?label=contrast%2Fagent-java&logo=docker&logoColor=white&style=flat-square&cacheSeconds=10800)](https://hub.docker.com/r/contrast/agent-java)
 - [![contrast/agent-nodejs](https://img.shields.io/docker/v/contrast/agent-nodejs?label=contrast%2Fagent-nodejs&logo=docker&logoColor=white&style=flat-square&cacheSeconds=10800)](https://hub.docker.com/r/contrast/agent-nodejs)
 - [![contrast/agent-php](https://img.shields.io/docker/v/contrast/agent-php?label=contrast%2Fagent-php&logo=docker&logoColor=white&style=flat-square&cacheSeconds=10800)](https://hub.docker.com/r/contrast/agent-php)
 - [![contrast/agent-python](https://img.shields.io/docker/v/contrast/agent-python?label=contrast%2Fagent-python&logo=docker&logoColor=white&style=flat-square&cacheSeconds=10800)](https://hub.docker.com/r/contrast/agent-python)
 - [![contrast/agent-flex](https://img.shields.io/docker/v/contrast/agent-flex?label=contrast%2Fagent-flex&logo=docker&logoColor=white&style=flat-square&cacheSeconds=10800)](https://hub.docker.com/r/contrast/agent-flex)
-
+- [![contrast/agent-dotnet-core](https://img.shields.io/docker/v/contrast/agent-dotnet-core?label=contrast%2Fagent-dotnet-core&logo=docker&logoColor=white&style=flat-square&cacheSeconds=10800)](https://hub.docker.com/r/contrast/agent-dotnet-core)
+- [![contrast/agent-dotnet-framework](https://img.shields.io/docker/v/contrast/agent-dotnet-framework?label=contrast%2Fagent-dotnet-framework&logo=docker&logoColor=white&style=flat-square&cacheSeconds=10800)](https://hub.docker.com/r/contrast/agent-dotnet-framework)
 
 Tags are generated in the following format:
 
@@ -53,7 +52,7 @@ Images are updated by executing a repository dispatch with a provided PAT.
 curl -H "Authorization: token ${GH_PAT}" \
     -H 'Accept: application/vnd.github.everest-preview+json' \
     "https://api.github.com/repos/Contrast-Security-OSS/agent-operator-images/dispatches" \
-    -d '{"event_type": "oob-update", "client_payload": {"type": "dotnet-core", "version": "2.1.12"}}'
+    -d '{"event_type": "oob-update", "client_payload": {"type": "dotnet", "version": "2.1.12"}}'
 ```
 
 Once the dispatch request is received, the following events execute automatically:

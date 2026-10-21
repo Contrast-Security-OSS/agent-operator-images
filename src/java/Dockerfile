@@ -17,7 +17,7 @@ RUN set -xe \
   --output /contrast/contrast-agent.jar \
   && echo "{ \"version\": \"${VERSION}\" }" > /contrast/image-manifest.json
 
-FROM busybox:stable@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662 AS final
+FROM busybox:1.37.0@sha256:9db7b59979c38555a39def84a31fb98b5296952f9e3afd4f6f11f05b07adfab0 AS final
 
 RUN set -xe \
   && addgroup -g 1001 custom-group \
