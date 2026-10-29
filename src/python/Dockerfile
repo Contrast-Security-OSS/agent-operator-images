@@ -1,7 +1,7 @@
 # Contrast Security, Inc licenses this file to you under the Apache 2.0 License.
 # See the LICENSE file in the project root for more information.
 
-FROM python:3.9-slim-bookworm AS builder
+FROM python:3.9-slim-bookworm@sha256:a02e9c5406c416c504d6c9a1a306ff4080c3173f1008d192f953bd20382a2d5c AS builder
 
 RUN set -xe \
   && apt-get update \
