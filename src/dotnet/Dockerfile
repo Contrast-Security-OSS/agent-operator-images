@@ -1,7 +1,7 @@
 # Contrast Security, Inc licenses this file to you under the Apache 2.0 License.
 # See the LICENSE file in the project root for more information.
 
-FROM --platform=$BUILDPLATFORM ubuntu:noble AS builder
+FROM --platform=$BUILDPLATFORM ubuntu:noble@sha256:c4a8d5503dfb2a3eb8ab5f807da5bc69a85730fb49b5cfca2330194ebcc41c7b AS builder
 
 RUN set -xe \
   && apt-get update \
@@ -52,7 +52,7 @@ ENTRYPOINT [ "/bin/sh", "/entrypoint.sh" ]
 
 # We don't currently support Windows containers in the Agent Operator
 # This image exists purely get .NET agent files into windows container images.
-FROM --platform=windows/amd64 mcr.microsoft.com/windows/nanoserver:2004 AS final-windows-amd64
+FROM --platform=windows/amd64 mcr.microsoft.com/windows/nanoserver:2004@sha256:0f92c5383582bafdaebef942e7185297bc8453934902808475f89be8cad89fdc AS final-windows-amd64
 COPY --from=builder /contrast /contrast
 
 # Use the correct final image based on TARGETPLATFORM
