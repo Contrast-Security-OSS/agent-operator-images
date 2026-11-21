@@ -5,6 +5,9 @@ on:
     types:
       - dotnet-oob-update
 
+permissions:
+  contents: read
+
 jobs:
   oob-update:
     runs-on: ubuntu-latest

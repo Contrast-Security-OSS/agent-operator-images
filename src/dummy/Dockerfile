@@ -1,7 +1,7 @@
 # Contrast Security, Inc licenses this file to you under the Apache 2.0 License.
 # See the LICENSE file in the project root for more information.
 
-FROM --platform=$BUILDPLATFORM ubuntu:noble AS builder
+FROM --platform=$BUILDPLATFORM ubuntu:noble@sha256:c4a8d5503dfb2a3eb8ab5f807da5bc69a85730fb49b5cfca2330194ebcc41c7b AS builder
 
 ARG VERSION
 RUN test -n "$VERSION" || (echo "VERSION arg not set, pass --build-arg 'VERSION=<version>' to docker build" && false)
@@ -10,6 +10,7 @@ RUN set -xe \
   && mkdir /contrast \
   && echo "{ \"version\": \"${VERSION}\" }" > /contrast/image-manifest.json
 
+# Dummy agent for testing non-root containers with the agent-operator
 FROM busybox:1.37.0@sha256:9db7b59979c38555a39def84a31fb98b5296952f9e3afd4f6f11f05b07adfab0 AS final
 
 RUN set -xe \
