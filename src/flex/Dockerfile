@@ -21,10 +21,13 @@ RUN set -xe \
 # No Flex service runs in the pod, so the injector only sees config the image writes here. 'agent-injector' with
 # no subcommand writes a marker for every config flag that is true (dotnet_core.enable_chaining among them).
 # Without it the injector reads those flags as false.
+# The CLI creates a Flex ID in flex-comms as a side effect. Baked into the image it would be shared by every pod
+# that uses it, so it is removed and the injector leaves CONTRAST_FLEX_ID unset.
 RUN set -xe \
   && /contrast/service/x86_64/contrast-flex --comms-parent-dir "/contrast" --agents-parent-dir "/contrast" agents \
   && /contrast/service/x86_64/contrast-flex --comms-parent-dir "/contrast" --agents-parent-dir "/contrast" auto-attach set true \
-  && /contrast/service/x86_64/contrast-flex --comms-parent-dir "/contrast" --agents-parent-dir "/contrast" agent-injector
+  && /contrast/service/x86_64/contrast-flex --comms-parent-dir "/contrast" --agents-parent-dir "/contrast" agent-injector \
+  && rm -f /contrast/flex-comms/contrast_flex_id
 
 # Fix the path for the php agent, '-exec echo "{}" \;' + 'grep .' gives a non-zero exit code if no files were found
 RUN set -xe \
