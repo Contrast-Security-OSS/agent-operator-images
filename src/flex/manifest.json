@@ -10,6 +10,7 @@
       "image-manifest.json",
       "injector/agent_injector.so",
       "flex-comms/flex_agent.auto_attach",
+      "flex-comms/flex_agent.agent.dotnet_core.enable_chaining",
       "flex-comms/dotnet-core-arm64-default",
       "flex-comms/dotnet-core-x64-default",
       "flex-comms/java-default",
